@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crk.hs.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.crk.hs.entity.User" >
+    <id column="bsm" property="bsm" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="DATE" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bsm, idcard, name, age, sex, birthday, email, phone, content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hs_user
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hs_user
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.crk.hs.entity.User" >
+    insert into hs_user (bsm, idcard, name, 
+      age, sex, birthday, email, 
+      phone, content)
+    values (#{bsm,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{age,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{email,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.crk.hs.entity.User" >
+    insert into hs_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bsm != null" >
+        bsm,
+      </if>
+      <if test="idcard != null" >
+        idcard,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bsm != null" >
+        #{bsm,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crk.hs.entity.User" >
+    update hs_user
+    <set >
+      <if test="idcard != null" >
+        idcard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crk.hs.entity.User" >
+    update hs_user
+    set idcard = #{idcard,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      age = #{age,jdbcType=INTEGER},
+      sex = #{sex,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=DATE},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR}
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </update>
+</mapper>
