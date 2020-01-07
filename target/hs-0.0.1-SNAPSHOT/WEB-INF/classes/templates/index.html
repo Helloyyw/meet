@@ -8,11 +8,111 @@
   <link rel="stylesheet" href="../static/dist/modules/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="../static/dist/modules/ionicons/css/ionicons.min.css">
   <link rel="stylesheet" href="../static/dist/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">
-
   <link rel="stylesheet" href="../static/dist/modules/summernote/summernote-lite.css">
   <link rel="stylesheet" href="../static/dist/modules/flag-icon-css/css/flag-icon.min.css">
   <link rel="stylesheet" href="../static/dist/css/demo.css">
   <link rel="stylesheet" href="../static/dist/css/style.css">
+
+  <!--  vue-->
+  <script src="../static/js/jquery-2.2.4.js"></script>
+  <script src="../static/Vue/vue.js"></script>
+  <script src="../static/element-ui/lib/index.js"></script>
+  <link rel="stylesheet" href="../static/element-ui/lib/theme-chalk/index.css">
+  <script src="../static/js/Jquery.Common.js"></script>
+  <script>
+    var vm;
+    window.onload = function () {
+      var ctx = document.getElementById("myChart").getContext('2d');
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          datasets: [{
+            label: 'Statistics',
+            data: [460, 458, 330, 502, 430, 610, 488],
+            borderWidth: 2,
+            backgroundColor: 'rgb(87,75,144)',
+            borderColor: 'rgb(87,75,144)',
+            borderWidth: 2.5,
+            pointBackgroundColor: '#ffffff',
+            pointRadius: 4
+          }]
+        },
+        options: {
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true,
+                stepSize: 150
+              }
+            }],
+            xAxes: [{
+              gridLines: {
+                display: false
+              }
+            }]
+          },
+        }
+      });
+      vm = new Vue({
+        el: "#app",
+        mounted: function () {
+          this.bingUserinfo();
+        },
+        data: {
+            dialogVisible: false,
+            username: "管理员",
+            age: "",
+            pwd:"",
+        },
+        methods: {
+          //绑定用户信息
+          bingUserinfo: function () {
+            var useinfo = Common.GetCookie("userinfo");
+            console.log(JSON.parse(useinfo));
+            useinfo =  JSON.parse(useinfo);
+            if(!(useinfo.name == 'admin')){
+              this.username = useinfo.name;
+            }
+            this.age = useinfo.age;
+            this.pwd = useinfo.pwd;
+          },
+          handleClose: function(done) {
+            this.$confirm('确认关闭？')
+                    .then(_ => {
+                      done();
+                    })
+                    .catch(_ => {});
+          }
+        }
+      });
+    }
+
+
+
+
+  </script>
+  <style>
+    .el-col {
+      border-radius: 4px;
+    }
+    .bg-purple-dark {
+      background: #99a9bf;
+    }
+    .bg-purple {
+      background: #d3dce6;
+    }
+    .bg-purple-light {
+      background: #e5e9f2;
+    }
+    .grid-content {
+      border-radius: 4px;
+      min-height: 36px;
+    }
+  </style>
 </head>
 
 <body>
@@ -79,13 +179,13 @@
           </li>
           <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg">
             <i class="ion ion-android-person d-lg-none"></i>
-            <div class="d-sm-none d-lg-inline-block">Hi, Ujang Maman</div></a>
+            <div  class="d-sm-none d-lg-inline-block">{{ username }}</div></a>
             <div class="dropdown-menu dropdown-menu-right">
-              <a href="profile.html" class="dropdown-item has-icon">
-                <i class="ion ion-android-person"></i> Profile
+              <a href="#" class="dropdown-item has-icon" @click="dialogVisible = true">
+                <i class="ion ion-android-person"></i> 用户详细信息
               </a>
               <a href="#" class="dropdown-item has-icon">
-                <i class="ion ion-log-out"></i> Logout
+                <i class="ion ion-log-out"></i> 退出
               </a>
             </div>
           </li>
@@ -117,37 +217,37 @@
             <li>
               <a href="#" class="has-dropdown"><i class="ion ion-ios-albums-outline"></i><span>Components</span></a>
               <ul class="menu-dropdown">
-                <li><a href="page/general.html"><i class="ion ion-ios-circle-outline"></i> Basic</a></li>
-                <li><a href="page/components.html"><i class="ion ion-ios-circle-outline"></i> Main Components</a></li>
-                <li><a href="page/buttons.html"><i class="ion ion-ios-circle-outline"></i> Buttons</a></li>
-                <li><a href="page/toastr.html"><i class="ion ion-ios-circle-outline"></i> Toastr</a></li>
+                <li><a href="/general.html"><i class="ion ion-ios-circle-outline"></i> Basic</a></li>
+                <li><a href="/components.html"><i class="ion ion-ios-circle-outline"></i> Main Components</a></li>
+                <li><a href="/buttons.html"><i class="ion ion-ios-circle-outline"></i> Buttons</a></li>
+                <li><a href="/toastr.html"><i class="ion ion-ios-circle-outline"></i> Toastr</a></li>
               </ul>
             </li>
             <li>
               <a href="#" class="has-dropdown"><i class="ion ion-flag"></i><span>Icons</span></a>
               <ul class="menu-dropdown">
-                <li><a href="page/ion-icons.html"><i class="ion ion-ios-circle-outline"></i> Ion Icons</a></li>
-                <li><a href="page/fontawesome.html"><i class="ion ion-ios-circle-outline"></i> Font Awesome</a></li>
-                <li><a href="page/flag.html"><i class="ion ion-ios-circle-outline"></i> Flag</a></li>
+                <li><a href="/ion-icons.html"><i class="ion ion-ios-circle-outline"></i> Ion Icons</a></li>
+                <li><a href="/fontawesome.html"><i class="ion ion-ios-circle-outline"></i> Font Awesome</a></li>
+                <li><a href="/flag.html"><i class="ion ion-ios-circle-outline"></i> Flag</a></li>
               </ul>
             </li>
             <li>
-              <a href="page/table.html"><i class="ion ion-clipboard"></i><span>Tables</span></a>
+              <a href="/table.html"><i class="ion ion-clipboard"></i><span>Tables</span></a>
             </li>
             <li>
-              <a href="page/chartjs.html"><i class="ion ion-stats-bars"></i><span>Chart.js</span></a>
+              <a href="/chartjs.html"><i class="ion ion-stats-bars"></i><span>Chart.js</span></a>
             </li>
             <li>
-              <a href="page/simple.html"><i class="ion ion-ios-location-outline"></i><span>Google Maps</span></a>
+              <a href="/simple.html"><i class="ion ion-ios-location-outline"></i><span>Google Maps</span></a>
             </li>
             <li>
               <a href="#" class="has-dropdown"><i class="ion ion-ios-copy-outline"></i><span>Examples</span></a>
               <ul class="menu-dropdown">
-                <li><a href="page/login.html"><i class="ion ion-ios-circle-outline"></i> Login</a></li>
-                <li><a href="page/register.html"><i class="ion ion-ios-circle-outline"></i> Register</a></li>
-                <li><a href="page/forgot.html"><i class="ion ion-ios-circle-outline"></i> Forgot Password</a></li>
-                <li><a href="page/reset.html"><i class="ion ion-ios-circle-outline"></i> Reset Password</a></li>
-                <li><a href="page/404.html"><i class="ion ion-ios-circle-outline"></i> 404</a></li>
+                <li><a href="/login.html"><i class="ion ion-ios-circle-outline"></i> Login</a></li>
+                <li><a href="/register.html"><i class="ion ion-ios-circle-outline"></i> Register</a></li>
+                <li><a href="/forgot.html"><i class="ion ion-ios-circle-outline"></i> Forgot Password</a></li>
+                <li><a href="/reset.html"><i class="ion ion-ios-circle-outline"></i> Reset Password</a></li>
+                <li><a href="/404.html"><i class="ion ion-ios-circle-outline"></i> 404</a></li>
               </ul>
             </li>
 
@@ -176,7 +276,7 @@
               <a href="#"><i class="ion ion-heart"></i> Badges <div class="badge badge-primary">10</div></a>
             </li>
             <li>
-              <a href="page/credits.html"><i class="ion ion-ios-information-outline"></i> Credits</a>
+              <a href="/credits.html"><i class="ion ion-ios-information-outline"></i> Credits</a>
             </li>          </ul>
           <div class="p-3 mt-4 mb-4">
             <a href="#" class="btn btn-danger btn-shadow btn-round has-icon has-icon-nofloat btn-block">
@@ -470,6 +570,30 @@
         <div class="footer-right"></div>
       </footer>
     </div>
+    <el-dialog
+            title="用户详细"
+            :visible.sync="dialogVisible"
+            width="40%"
+            :before-close="handleClose">
+     <div>
+       <el-row :gutter="10">
+         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+           <div class="grid-content bg-purple">
+          <span>用户名:</span>  {{username}}
+           </div>
+         </el-col>
+         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+           <div class="grid-content bg-purple-light">
+          <span> 密  码:</span>  {{pwd}}
+           </div>
+         </el-col>
+       </el-row>
+     </div>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+<!--    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
+  </span>
+    </el-dialog>
   </div>
 
   <script src="../static/dist/modules/jquery.min.js"></script>
@@ -483,43 +607,7 @@
   <script src="../static/dist/modules/chart.min.js"></script>
   <script src="../static/dist/modules/summernote/summernote-lite.js"></script>
 
-  <script>
-  var ctx = document.getElementById("myChart").getContext('2d');
-  var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-      datasets: [{
-        label: 'Statistics',
-        data: [460, 458, 330, 502, 430, 610, 488],
-        borderWidth: 2,
-        backgroundColor: 'rgb(87,75,144)',
-        borderColor: 'rgb(87,75,144)',
-        borderWidth: 2.5,
-        pointBackgroundColor: '#ffffff',
-        pointRadius: 4
-      }]
-    },
-    options: {
-      legend: {
-        display: false
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true,
-            stepSize: 150
-          }
-        }],
-        xAxes: [{
-          gridLines: {
-            display: false
-          }
-        }]
-      },
-    }
-  });
-  </script>
+
   <script src="../static/dist/js/scripts.js"></script>
   <script src="../static/dist/js/custom.js"></script>
   <script src="../static/dist/js/demo.js"></script>
