@@ -1,23 +1,27 @@
 package com.crk.hs.entity;
 
-import java.util.Date;
-
 public class User {
     private String bsm;
 
-    private String idcard;
-
     private String name;
+
+    private String pwd;
+
+    private String cardid;
 
     private Integer age;
 
     private String sex;
 
-    private Date birthday;
+    private String level;
+
+    private String phone;
 
     private String email;
 
-    private String phone;
+    private String acl;
+
+    private String company;
 
     private String content;
 
@@ -29,20 +33,28 @@ public class User {
         this.bsm = bsm == null ? null : bsm.trim();
     }
 
-    public String getIdcard() {
-        return idcard;
-    }
-
-    public void setIdcard(String idcard) {
-        this.idcard = idcard == null ? null : idcard.trim();
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd == null ? null : pwd.trim();
+    }
+
+    public String getCardid() {
+        return cardid;
+    }
+
+    public void setCardid(String cardid) {
+        this.cardid = cardid == null ? null : cardid.trim();
     }
 
     public Integer getAge() {
@@ -61,12 +73,20 @@ public class User {
         this.sex = sex == null ? null : sex.trim();
     }
 
-    public Date getBirthday() {
-        return birthday;
+    public String getLevel() {
+        return level;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
+    public void setLevel(String level) {
+        this.level = level == null ? null : level.trim();
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
     }
 
     public String getEmail() {
@@ -77,12 +97,20 @@ public class User {
         this.email = email == null ? null : email.trim();
     }
 
-    public String getPhone() {
-        return phone;
+    public String getAcl() {
+        return acl;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone == null ? null : phone.trim();
+    public void setAcl(String acl) {
+        this.acl = acl == null ? null : acl.trim();
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company == null ? null : company.trim();
     }
 
     public String getContent() {

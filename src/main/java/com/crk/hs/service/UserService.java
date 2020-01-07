@@ -1,9 +1,9 @@
 package com.crk.hs.service;
 
-
-import com.crk.hs.vo.ResultVo;
-
+import com.crk.hs.entity.User;
+import org.apache.ibatis.annotations.Mapper;
+import java.util.List;
 public interface UserService {
-
-    public ResultVo getAllUsers();
+  //根据用户名和密码查询用户信息
+   public User getByUserNameAndPwd(String username,String password);
 }

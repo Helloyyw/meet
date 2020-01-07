@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
-Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: admin
-Implementation-Vendor-Id: com.crk
 Created-By: IntelliJ IDEA
+Built-By: admin
 Build-Jdk: 1.8.0_201
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.crk
 Main-Class: ${start-class}
 

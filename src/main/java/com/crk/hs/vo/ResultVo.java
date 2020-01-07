@@ -1,5 +1,9 @@
 package com.crk.hs.vo;
 
+/**
+ * 统一返回处理类
+ * @param <T>
+ */
 /*http请求返回的最外层对象*/
 public class ResultVo<T> {
 

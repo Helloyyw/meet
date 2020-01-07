@@ -3,47 +3,55 @@
 <mapper namespace="com.crk.hs.dao.UserMapper" >
   <resultMap id="BaseResultMap" type="com.crk.hs.entity.User" >
     <id column="bsm" property="bsm" jdbcType="VARCHAR" />
-    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+    <result column="cardid" property="cardid" jdbcType="VARCHAR" />
     <result column="age" property="age" jdbcType="INTEGER" />
     <result column="sex" property="sex" jdbcType="VARCHAR" />
-    <result column="birthday" property="birthday" jdbcType="DATE" />
-    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="acl" property="acl" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    bsm, idcard, name, age, sex, birthday, email, phone, content
+    bsm, name, pwd, cardid, age, sex, level, phone, email, acl, company, content
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from hs_user
+    from m_user
     where bsm = #{bsm,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from hs_user
+    delete from m_user
     where bsm = #{bsm,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.crk.hs.entity.User" >
-    insert into hs_user (bsm, idcard, name, 
-      age, sex, birthday, email, 
-      phone, content)
-    values (#{bsm,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{age,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{email,jdbcType=VARCHAR}, 
-      #{phone,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR})
+    insert into m_user (bsm, name, pwd, 
+      cardid, age, sex, level, 
+      phone, email, acl, 
+      company, content)
+    values (#{bsm,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+      #{cardid,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR}, #{level,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{acl,jdbcType=VARCHAR}, 
+      #{company,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.crk.hs.entity.User" >
-    insert into hs_user
+    insert into m_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="bsm != null" >
         bsm,
       </if>
-      <if test="idcard != null" >
-        idcard,
-      </if>
       <if test="name != null" >
         name,
+      </if>
+      <if test="pwd != null" >
+        pwd,
+      </if>
+      <if test="cardid != null" >
+        cardid,
       </if>
       <if test="age != null" >
         age,
@@ -51,14 +59,20 @@
       <if test="sex != null" >
         sex,
       </if>
-      <if test="birthday != null" >
-        birthday,
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="phone != null" >
+        phone,
       </if>
       <if test="email != null" >
         email,
       </if>
-      <if test="phone != null" >
-        phone,
+      <if test="acl != null" >
+        acl,
+      </if>
+      <if test="company != null" >
+        company,
       </if>
       <if test="content != null" >
         content,
@@ -68,11 +82,14 @@
       <if test="bsm != null" >
         #{bsm,jdbcType=VARCHAR},
       </if>
-      <if test="idcard != null" >
-        #{idcard,jdbcType=VARCHAR},
-      </if>
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="cardid != null" >
+        #{cardid,jdbcType=VARCHAR},
       </if>
       <if test="age != null" >
         #{age,jdbcType=INTEGER},
@@ -80,14 +97,20 @@
       <if test="sex != null" >
         #{sex,jdbcType=VARCHAR},
       </if>
-      <if test="birthday != null" >
-        #{birthday,jdbcType=DATE},
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
       </if>
       <if test="email != null" >
         #{email,jdbcType=VARCHAR},
       </if>
-      <if test="phone != null" >
-        #{phone,jdbcType=VARCHAR},
+      <if test="acl != null" >
+        #{acl,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
       </if>
       <if test="content != null" >
         #{content,jdbcType=VARCHAR},
@@ -95,13 +118,16 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.crk.hs.entity.User" >
-    update hs_user
+    update m_user
     <set >
-      <if test="idcard != null" >
-        idcard = #{idcard,jdbcType=VARCHAR},
-      </if>
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="cardid != null" >
+        cardid = #{cardid,jdbcType=VARCHAR},
       </if>
       <if test="age != null" >
         age = #{age,jdbcType=INTEGER},
@@ -109,14 +135,20 @@
       <if test="sex != null" >
         sex = #{sex,jdbcType=VARCHAR},
       </if>
-      <if test="birthday != null" >
-        birthday = #{birthday,jdbcType=DATE},
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
       </if>
       <if test="email != null" >
         email = #{email,jdbcType=VARCHAR},
       </if>
-      <if test="phone != null" >
-        phone = #{phone,jdbcType=VARCHAR},
+      <if test="acl != null" >
+        acl = #{acl,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
       </if>
       <if test="content != null" >
         content = #{content,jdbcType=VARCHAR},
@@ -125,15 +157,21 @@
     where bsm = #{bsm,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.crk.hs.entity.User" >
-    update hs_user
-    set idcard = #{idcard,jdbcType=VARCHAR},
-      name = #{name,jdbcType=VARCHAR},
+    update m_user
+    set name = #{name,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      cardid = #{cardid,jdbcType=VARCHAR},
       age = #{age,jdbcType=INTEGER},
       sex = #{sex,jdbcType=VARCHAR},
-      birthday = #{birthday,jdbcType=DATE},
-      email = #{email,jdbcType=VARCHAR},
+      level = #{level,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      acl = #{acl,jdbcType=VARCHAR},
+      company = #{company,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR}
     where bsm = #{bsm,jdbcType=VARCHAR}
   </update>
+  <select id="getByUserNameAndPwd" parameterType="java.lang.String" resultMap="BaseResultMap">
+       select * from m_user where  name = #{username,jdbcType=VARCHAR} and pwd = #{password,jdbcType=VARCHAR}
+  </select>
 </mapper>
