@@ -5,13 +5,30 @@
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" name="viewport">
   <title>Dashboard &mdash; Stisla</title>
 
-  <link rel="stylesheet" href="../static/dist/modules/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../static/dist/modules/ionicons/css/ionicons.min.css">
-  <link rel="stylesheet" href="../static/dist/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">
-  <link rel="stylesheet" href="../static/dist/modules/summernote/summernote-lite.css">
-  <link rel="stylesheet" href="../static/dist/modules/flag-icon-css/css/flag-icon.min.css">
-  <link rel="stylesheet" href="../static/dist/css/demo.css">
-  <link rel="stylesheet" href="../static/dist/css/style.css">
+<!--  <link rel="stylesheet" href="../static/dist/modules/bootstrap/css/bootstrap.min.css">-->
+<!--  <link rel="stylesheet" href="../static/dist/modules/ionicons/css/ionicons.min.css">-->
+<!--  <link rel="stylesheet" href="../static/dist/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">-->
+<!--  <link rel="stylesheet" href="../static/dist/modules/summernote/summernote-lite.css">-->
+<!--  <link rel="stylesheet" href="../static/dist/modules/flag-icon-css/css/flag-icon.min.css">-->
+<!--  <link rel="stylesheet" href="../static/dist/css/demo.css">-->
+<!--  <link rel="stylesheet" href="../static/dist/css/style.css">-->
+
+
+  <script src="../static/dist/modules/jquery.min.js"></script>
+<!--  <script src="../static/dist/modules/popper.js"></script>-->
+<!--  <script src="../static/dist/modules/tooltip.js"></script>-->
+<!--  <script src="../static/dist/modules/bootstrap/js/bootstrap.min.js"></script>-->
+<!--  <script src="../static/dist/modules/nicescroll/jquery.nicescroll.min.js"></script>-->
+<!--  <script src="../static/dist/modules/scroll-up-bar/dist/scroll-up-bar.min.js"></script>-->
+<!--  <script src="../static/dist/js/sa-functions.js"></script>-->
+
+<!--  <script src="../static/dist/modules/chart.min.js"></script>-->
+<!--  <script src="../static/dist/modules/summernote/summernote-lite.js"></script>-->
+
+
+<!--&lt;!&ndash;  <script src="../static/dist/js/scripts.js"></script>&ndash;&gt;-->
+<!--  <script src="../static/dist/js/custom.js"></script>-->
+<!--  <script src="../static/dist/js/demo.js"></script>-->
 
   <!--  vue-->
   <script src="../static/js/jquery-2.2.4.js"></script>
@@ -19,54 +36,86 @@
   <script src="../static/element-ui/lib/index.js"></script>
   <link rel="stylesheet" href="../static/element-ui/lib/theme-chalk/index.css">
   <script src="../static/js/Jquery.Common.js"></script>
+  <style>
+        .el-col {
+            border-radius: 4px;
+        }
+        .bg-purple-dark {
+            background: #99a9bf;
+        }
+        .bg-purple {
+            background: #d3dce6;
+        }
+        .bg-purple-light {
+            background: #e5e9f2;
+        }
+        .grid-content {
+            border-radius: 4px;
+            min-height: 36px;
+        }
+        a {
+            text-decoration: none;
+            color: black;
+        }
+        .box {
+            display: flex;
+            flex-direction:column;
+            width: 100%;
+            height: 100%;
+        }
+        .touxiang{
+            display: flex;
+            flex-direction:row;
+            min-height: 150px;
+            width: 100%;
+            text-align: left;
+        }
+        .treeMenu{
+            display: flex;
+            width: 100%;
+        }
+        .touxiang_img{
+            width: 50px;
+            height: 50px;
+            border-radius: 100%;
+            overflow: hidden;
+        }
+        round_icon{
+            wmax-height: 100%;
+        }
+
+        .touxiang_text{
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+        }
+        el-tab-pane{
+            width: 100%;
+            height: 100%;
+        }
+      .tabhtml{
+          width: 100%;
+          min-height: 860px;
+          overflow: scroll;
+      }
+
+    </style>
   <script>
     var vm;
-    window.onload = function () {
-      var ctx = document.getElementById("myChart").getContext('2d');
-      var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-          datasets: [{
-            label: 'Statistics',
-            data: [460, 458, 330, 502, 430, 610, 488],
-            borderWidth: 2,
-            backgroundColor: 'rgb(87,75,144)',
-            borderColor: 'rgb(87,75,144)',
-            borderWidth: 2.5,
-            pointBackgroundColor: '#ffffff',
-            pointRadius: 4
-          }]
-        },
-        options: {
-          legend: {
-            display: false
-          },
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true,
-                stepSize: 150
-              }
-            }],
-            xAxes: [{
-              gridLines: {
-                display: false
-              }
-            }]
-          },
-        }
-      });
+    $(function() {
       vm = new Vue({
         el: "#app",
         mounted: function () {
-          this.bingUserinfo();
+        //  this.bingUserinfo();
         },
         data: {
-            dialogVisible: false,
-            username: "管理员",
-            age: "",
-            pwd:"",
+            editableTabsValue: '1',
+            editableTabs: [{
+                title: '首页',
+                name: '1',
+                content: 'Tab 1 content'
+            }],
+            tabIndex: 1,
         },
         methods: {
           //绑定用户信息
@@ -79,6 +128,7 @@
             }
             this.age = useinfo.age;
             this.pwd = useinfo.pwd;
+            this.level = useinfo.level;
           },
           handleClose: function(done) {
             this.$confirm('确认关闭？')
@@ -86,530 +136,179 @@
                       done();
                     })
                     .catch(_ => {});
-          }
+          },
+          handleOpen : function(key, keyPath) {
+            console.log(key, keyPath);
+          },
+          handleClose: function(key, keyPath) {
+            console.log(key, keyPath);
+          },
+            addTab: function(targetName,iframeLink,name) {
+                let newTabName = ++this.tabIndex + '';
+                var srclink = "<iframe src= '"+iframeLink+" '></iframe>";
+
+                this.editableTabs.push({
+                    title: name,
+                    name: newTabName,
+                    content: '<iframe class="tabhtml" src= '+iframeLink+ '></iframe>'
+                });
+                this.editableTabsValue = newTabName;
+            },//添加tab页面
+            removeTab: function(targetName) {
+                let tabs = this.editableTabs;
+                let activeName = this.editableTabsValue;
+                if (activeName === targetName) {
+                    tabs.forEach((tab, index) => {
+                        if (tab.name === targetName) {
+                            let nextTab = tabs[index + 1] || tabs[index - 1];
+                            if (nextTab) {
+                                activeName = nextTab.name;
+                            }
+                        }
+                    });
+                }
+
+                this.editableTabsValue = activeName;
+                this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+            }//删除tab页面
+
         }
       });
-    }
-
-
-
-
+    });
   </script>
-  <style>
-    .el-col {
-      border-radius: 4px;
-    }
-    .bg-purple-dark {
-      background: #99a9bf;
-    }
-    .bg-purple {
-      background: #d3dce6;
-    }
-    .bg-purple-light {
-      background: #e5e9f2;
-    }
-    .grid-content {
-      border-radius: 4px;
-      min-height: 36px;
-    }
-  </style>
+
 </head>
 
 <body>
+
   <div id="app">
-    <div class="main-wrapper">
-      <div class="navbar-bg"></div>
-      <nav class="navbar navbar-expand-lg main-navbar">
-        <form class="form-inline mr-auto">
-          <ul class="navbar-nav mr-3">
-            <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="ion ion-navicon-round"></i></a></li>
-            <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="ion ion-search"></i></a></li>
-          </ul>
-          <div class="search-element">
-            <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn" type="submit"><i class="ion ion-search"></i></button>
-          </div>
-        </form>
-        <ul class="navbar-nav navbar-right">
-          <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg beep"><i class="ion ion-ios-bell-outline"></i></a>
-            <div class="dropdown-menu dropdown-list dropdown-menu-right">
-              <div class="dropdown-header">Notifications
-                <div class="float-right">
-                  <a href="#">View All</a>
-                </div>
-              </div>
-              <div class="dropdown-list-content">
-                <a href="#" class="dropdown-item dropdown-item-unread">
-                  <img alt="image" src="../static/dist/img/avatar/avatar-1.jpeg" class="rounded-circle dropdown-item-img">
-                  <div class="dropdown-item-desc">
-                    <b>Kusnaedi</b> has moved task <b>Fix bug header</b> to <b>Done</b>
-                    <div class="time">10 Hours Ago</div>
-                  </div>
-                </a>
-                <a href="#" class="dropdown-item dropdown-item-unread">
-                  <img alt="image" src="../static/dist/img/avatar/avatar-2.jpeg" class="rounded-circle dropdown-item-img">
-                  <div class="dropdown-item-desc">
-                    <b>Ujang Maman</b> has moved task <b>Fix bug footer</b> to <b>Progress</b>
-                    <div class="time">12 Hours Ago</div>
-                  </div>
-                </a>
-                <a href="#" class="dropdown-item">
-                  <img alt="image" src="../static/dist/img/avatar/avatar-3.jpeg" class="rounded-circle dropdown-item-img">
-                  <div class="dropdown-item-desc">
-                    <b>Agung Ardiansyah</b> has moved task <b>Fix bug sidebar</b> to <b>Done</b>
-                    <div class="time">12 Hours Ago</div>
-                  </div>
-                </a>
-                <a href="#" class="dropdown-item">
-                  <img alt="image" src="../static/dist/img/avatar/avatar-4.jpeg" class="rounded-circle dropdown-item-img">
-                  <div class="dropdown-item-desc">
-                    <b>Ardian Rahardiansyah</b> has moved task <b>Fix bug navbar</b> to <b>Done</b>
-                    <div class="time">16 Hours Ago</div>
-                  </div>
-                </a>
-                <a href="#" class="dropdown-item">
-                  <img alt="image" src="../static/dist/img/avatar/avatar-5.jpeg" class="rounded-circle dropdown-item-img">
-                  <div class="dropdown-item-desc">
-                    <b>Alfa Zulkarnain</b> has moved task <b>Add logo</b> to <b>Done</b>
-                    <div class="time">Yesterday</div>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </li>
-          <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg">
-            <i class="ion ion-android-person d-lg-none"></i>
-            <div  class="d-sm-none d-lg-inline-block">{{ username }}</div></a>
-            <div class="dropdown-menu dropdown-menu-right">
-              <a href="#" class="dropdown-item has-icon" @click="dialogVisible = true">
-                <i class="ion ion-android-person"></i> 用户详细信息
-              </a>
-              <a href="#" class="dropdown-item has-icon">
-                <i class="ion ion-log-out"></i> 退出
-              </a>
-            </div>
-          </li>
-        </ul>
-      </nav>
-      <div class="main-sidebar">
-        <aside id="sidebar-wrapper">
-          <div class="sidebar-brand">
-            <a href="index.html">Stisla Lite</a>
-          </div>
-          <div class="sidebar-user">
-            <div class="sidebar-user-picture">
-              <img alt="image" src="../static/dist/img/avatar/avatar-1.jpeg">
-            </div>
-            <div class="sidebar-user-details">
-              <div class="user-name">Ujang Maman</div>
-              <div class="user-role">
-                Administrator
-              </div>
-            </div>
-          </div>
-          <ul class="sidebar-menu">
-            <li class="menu-header">Dashboard</li>
-            <li class="active">
-              <a href="index.html"><i class="ion ion-speedometer"></i><span>Dashboard</span></a>
-            </li>
+    <el-row  style="height: 100%; width: 100%">
+          <!--          左侧-->
+      <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
+            <div class="box">
+              <!-- 用户头像-->
+                <div class="touxiang">
+                    <div class="touxiang_img" >
+                      <img class="round_icon" src="../static/dist/img/avatar/avatar-3.jpeg">
+                    </div>
 
-            <li class="menu-header">Components</li>
-            <li>
-              <a href="#" class="has-dropdown"><i class="ion ion-ios-albums-outline"></i><span>Components</span></a>
-              <ul class="menu-dropdown">
-                <li><a href="/general.html"><i class="ion ion-ios-circle-outline"></i> Basic</a></li>
-                <li><a href="/components.html"><i class="ion ion-ios-circle-outline"></i> Main Components</a></li>
-                <li><a href="/buttons.html"><i class="ion ion-ios-circle-outline"></i> Buttons</a></li>
-                <li><a href="/toastr.html"><i class="ion ion-ios-circle-outline"></i> Toastr</a></li>
-              </ul>
-            </li>
-            <li>
-              <a href="#" class="has-dropdown"><i class="ion ion-flag"></i><span>Icons</span></a>
-              <ul class="menu-dropdown">
-                <li><a href="/ion-icons.html"><i class="ion ion-ios-circle-outline"></i> Ion Icons</a></li>
-                <li><a href="/fontawesome.html"><i class="ion ion-ios-circle-outline"></i> Font Awesome</a></li>
-                <li><a href="/flag.html"><i class="ion ion-ios-circle-outline"></i> Flag</a></li>
-              </ul>
-            </li>
-            <li>
-              <a href="/table.html"><i class="ion ion-clipboard"></i><span>Tables</span></a>
-            </li>
-            <li>
-              <a href="/chartjs.html"><i class="ion ion-stats-bars"></i><span>Chart.js</span></a>
-            </li>
-            <li>
-              <a href="/simple.html"><i class="ion ion-ios-location-outline"></i><span>Google Maps</span></a>
-            </li>
-            <li>
-              <a href="#" class="has-dropdown"><i class="ion ion-ios-copy-outline"></i><span>Examples</span></a>
-              <ul class="menu-dropdown">
-                <li><a href="/login.html"><i class="ion ion-ios-circle-outline"></i> Login</a></li>
-                <li><a href="/register.html"><i class="ion ion-ios-circle-outline"></i> Register</a></li>
-                <li><a href="/forgot.html"><i class="ion ion-ios-circle-outline"></i> Forgot Password</a></li>
-                <li><a href="/reset.html"><i class="ion ion-ios-circle-outline"></i> Reset Password</a></li>
-                <li><a href="/404.html"><i class="ion ion-ios-circle-outline"></i> 404</a></li>
-              </ul>
-            </li>
+                  <div class="touxiang_text">
+                      <p>user</p>
+                      <p>管理员</p>
+                  </div>
+                </div>
 
-            <li class="menu-header">More</li>
-            <li>
-              <a href="#" class="has-dropdown"><i class="ion ion-ios-nutrition"></i> Click Me</a>
-              <ul class="menu-dropdown">
-                <li><a href="#"><i class="ion ion-ios-circle-outline"></i> Menu 1</a></li>
-                <li><a href="#" class="has-dropdown"><i class="ion ion-ios-circle-outline"></i> Menu 2</a>
-                  <ul class="menu-dropdown">
-                    <li><a href="#"><i class="ion ion-ios-circle-outline"></i> Child Menu 1</a></li>
-                    <li><a href="#"><i class="ion ion-ios-circle-outline"></i> Child Menu 2</a></li>
-                    <li><a href="#" class="has-dropdown"><i class="ion ion-ios-circle-outline"></i> Child Menu 3</a>
-                      <ul class="menu-dropdown">
-                        <li><a href="#"><i class="ion ion-ios-circle-outline"></i> Child Menu 1</a></li>
-                        <li><a href="#"><i class="ion ion-ios-circle-outline"></i> Child Menu 2</a></li>
-                        <li><a href="#"><i class="ion ion-ios-circle-outline"></i> Child Menu 3</a></li>
-                      </ul>
-                    </li>
-                    <li><a href="#"><i class="ion ion-ios-circle-outline"></i> Child Menu 4</a></li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a href="#"><i class="ion ion-heart"></i> Badges <div class="badge badge-primary">10</div></a>
-            </li>
-            <li>
-              <a href="/credits.html"><i class="ion ion-ios-information-outline"></i> Credits</a>
-            </li>          </ul>
-          <div class="p-3 mt-4 mb-4">
-            <a href="#" class="btn btn-danger btn-shadow btn-round has-icon has-icon-nofloat btn-block">
-              <i class="ion ion-help-buoy"></i> <div>Go PRO!</div>
-            </a>
-          </div>
-        </aside>
-      </div>
-      <div class="main-content">
-        <section class="section">
-          <h1 class="section-header">
-            <div>Dashboard</div>
-          </h1>
-          <div class="row">
-            <div class="col-lg-3 col-md-6 col-12">
-              <div class="card card-sm-3">
-                <div class="card-icon bg-primary">
-                  <i class="ion ion-person"></i>
-                </div>
-                <div class="card-wrap">
-                  <div class="card-header">
-                    <h4>Total Admin</h4>
-                  </div>
-                  <div class="card-body">
-                    10
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-12">
-              <div class="card card-sm-3">
-                <div class="card-icon bg-danger">
-                  <i class="ion ion-ios-paper-outline"></i>
-                </div>
-                <div class="card-wrap">
-                  <div class="card-header">
-                    <h4>News</h4>
-                  </div>
-                  <div class="card-body">
-                    42
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-12">
-              <div class="card card-sm-3">
-                <div class="card-icon bg-warning">
-                  <i class="ion ion-paper-airplane"></i>
-                </div>
-                <div class="card-wrap">
-                  <div class="card-header">
-                    <h4>Reports</h4>
-                  </div>
-                  <div class="card-body">
-                    1,201
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-12">
-              <div class="card card-sm-3">
-                <div class="card-icon bg-success">
-                  <i class="ion ion-record"></i>
-                </div>
-                <div class="card-wrap">
-                  <div class="card-header">
-                    <h4>Online Users</h4>
-                  </div>
-                  <div class="card-body">
-                    47
-                  </div>
-                </div>
-              </div>
-            </div>                  
-          </div>
-          <div class="row">
-            <div class="col-lg-8 col-md-12 col-12 col-sm-12">
-              <div class="card">
-                <div class="card-header">
-                  <div class="float-right">
-                    <div class="btn-group">
-                      <a href="#" class="btn active">Week</a>
-                      <a href="#" class="btn">Month</a>
-                      <a href="#" class="btn">Year</a>
-                    </div>
-                  </div>
-                  <h4>Statistics</h4>
-                </div>
-                <div class="card-body">
-                  <canvas id="myChart" height="158"></canvas>
-                  <div class="statistic-details mt-sm-4">
-                    <div class="statistic-details-item">
-                      <small class="text-muted"><span class="text-primary"><i class="ion-arrow-up-b"></i></span> 7%</small>
-                      <div class="detail-value">$243</div>
-                      <div class="detail-name">Today's Sales</div>
-                    </div>
-                    <div class="statistic-details-item">
-                      <small class="text-muted"><span class="text-danger"><i class="ion-arrow-down-b"></i></span> 23%</small>
-                      <div class="detail-value">$2,902</div>
-                      <div class="detail-name">This Week's Sales</div>
-                    </div>
-                    <div class="statistic-details-item">
-                      <small class="text-muted"><span class="text-primary"><i class="ion-arrow-up-b"></i></span>9%</small>
-                      <div class="detail-value">$12,821</div>
-                      <div class="detail-name">This Month's Sales</div>
-                    </div>
-                    <div class="statistic-details-item">
-                      <small class="text-muted"><span class="text-primary"><i class="ion-arrow-up-b"></i></span> 19%</small>
-                      <div class="detail-value">$92,142</div>
-                      <div class="detail-name">This Year's Sales</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-12 col-12 col-sm-12">
-              <div class="card">
-                <div class="card-header">
-                  <h4>Recent Activities</h4>
-                </div>
-                <div class="card-body">             
-                  <ul class="list-unstyled list-unstyled-border">
-                    <li class="media">
-                      <img class="mr-3 rounded-circle" width="50" src="../static/dist/img/avatar/avatar-1.jpeg" alt="avatar">
-                      <div class="media-body">
-                        <div class="float-right"><small>10m</small></div>
-                        <div class="media-title">Farhan A Mujib</div>
-                        <small>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.</small>
+                <!--  树形菜单组件-->
+                <div class="treeMenu" >
+                  <el-row class="tac" style="width: 100%;">
+                    <el-col :span="12" style="width: 100%">
+                      <div class="tree_title" style="background-color: #8cc5ff">
+                        <el-card>
+                          <a href="index.html">会议综合管理系统</a>
+                        </el-card>
                       </div>
-                    </li>
-                    <li class="media">
-                      <img class="mr-3 rounded-circle" width="50" src="../static/dist/img/avatar/avatar-2.jpeg" alt="avatar">
-                      <div class="media-body">
-                        <div class="float-right"><small>10m</small></div>
-                        <div class="media-title">Ujang Maman</div>
-                        <small>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.</small>
-                      </div>
-                    </li>
-                    <li class="media">
-                      <img class="mr-3 rounded-circle" width="50" src="../static/dist/img/avatar/avatar-3.jpeg" alt="avatar">
-                      <div class="media-body">
-                        <div class="float-right"><small>10m</small></div>
-                        <div class="media-title">Rizal Fakhri</div>
-                        <small>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.</small>
-                      </div>
-                    </li>
-                    <li class="media">
-                      <img class="mr-3 rounded-circle" width="50" src="../static/dist/img/avatar/avatar-4.jpeg" alt="avatar">
-                      <div class="media-body">
-                        <div class="float-right"><small>10m</small></div>
-                        <div class="media-title">Alfa Zulkarnain</div>
-                        <small>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.</small>
-                      </div>
-                    </li>
-                  </ul>
-                  <div class="text-center">
-                    <a href="#" class="btn btn-primary btn-round">
-                      View All
-                    </a>
-                  </div>
+                      <el-menu
+                              default-active="2"
+                              class="el-menu-vertical-demo"
+                              @open="handleOpen"
+                              @close="handleClose">
+                        <el-submenu index="1">
+                          <template slot="title">
+                            <i class="el-icon-location"></i>
+                            <span>接待活动管理</span>
+                          </template>
+                          <el-menu-item-group>
+                            <template slot="title">分组一</template>
+                            <el-menu-item index="1-1">选项1</el-menu-item>
+                            <el-menu-item index="1-2">选项2</el-menu-item>
+                          </el-menu-item-group>
+                          <el-menu-item-group title="分组2">
+                            <el-menu-item index="1-3">选项3</el-menu-item>
+                          </el-menu-item-group>
+                          <el-submenu index="1-4">
+                            <template slot="title">选项4</template>
+                            <el-menu-item index="1-4-1">选项1</el-menu-item>
+                          </el-submenu>
+                        </el-submenu>
+                          <el-submenu index="2">
+                              <template slot="title">
+                                  <i class="el-icon-location"></i>
+                                  <span>用户管理</span>
+                              </template>
+                              <el-menu-item-group>
+                                  <template slot="title">工作人员模块</template>
+                                  <el-menu-item index="2-1"  @click="addTab(editableTabsValue,'userhtml.html','人员管理')">人员管理</el-menu-item>
+                                  <el-menu-item index="2-2"  @click="addTab(editableTabsValue,'userhtml.html','选项2')">选项2</el-menu-item>
+                              </el-menu-item-group>
+                              <el-menu-item-group title="参会人员模块">
+                                  <el-menu-item index="2-3">参会人员管理</el-menu-item>
+                              </el-menu-item-group>
+                              <el-submenu index="2-4">
+                                  <template slot="title">选项4</template>
+                                  <el-menu-item index="2-4-1">选项1</el-menu-item>
+                              </el-submenu>
+                          </el-submenu>
+                      </el-menu>
+                    </el-col>
+                  </el-row>
                 </div>
-              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-5 col-md-12 col-12 col-sm-12">
-              <form method="post" class="needs-validation" novalidate>
-                <div class="card">
-                  <div class="card-header">
-                    <h4>Quick Draft</h4>
-                  </div>
-                  <div class="card-body">
-                    <div class="form-group">
-                      <label>Title</label>
-                      <input type="text" name="title" class="form-control" required>
-                      <div class="invalid-feedback">
-                        Please fill in the title
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label>Content</label>
-                      <textarea class="summernote-simple"></textarea>
-                    </div>
-                  </div>
-                  <div class="card-footer">
-                    <button class="btn btn-primary">Save Draft</button>
-                  </div>
+      </el-col>
+          <!--          右侧-->
+      <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20" >
+            <!--              头部-->
+        <div style="height: 100%;width: 100%">
+           <el-row :gutter="10">
+              <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                <div class="grid-content bg-purple">
+                  asda
                 </div>
-              </form>
-            </div>
-            <div class="col-lg-7 col-md-12 col-12 col-sm-12">
-              <div class="card">
-                <div class="card-header">
-                  <div class="float-right">
-                    <a href="#" class="btn btn-primary">View All</a>
-                  </div>
-                  <h4>Latest Posts</h4>
+              </el-col>
+              <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                <div class="grid-content bg-purple" style="min-height: 590px;">
+                    <el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab">
+                        <el-tab-pane
+                                v-for="(item, index) in editableTabs"
+                                :key="item.name"
+                                :label="item.title"
+                                :name="item.name"
+                                v-html="item.content"
+                        >
+                        </el-tab-pane>
+                    </el-tabs>
                 </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th>Title</th>
-                          <th>Author</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>                         
-                        <tr>
-                          <td>
-                            Introduction Laravel 5
-                            <div class="table-links">
-                              in <a href="#">Web Development</a>
-                              <div class="bullet"></div>
-                              <a href="#">View</a>
-                            </div>
-                          </td>
-                          <td>
-                            <a href="#"><img src="../static/dist/img/avatar/avatar-1.jpeg" alt="avatar" width="30" class="rounded-circle mr-1"> Bagus Dwi Cahya</a>
-                          </td>
-                          <td>
-                            <a class="btn btn-primary btn-action mr-1" data-toggle="tooltip" title="Edit"><i class="ion ion-edit"></i></a>
-                            <a class="btn btn-danger btn-action" data-toggle="tooltip" title="Delete"><i class="ion ion-trash-b"></i></a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Laravel 5 Tutorial - Installation
-                            <div class="table-links">
-                              in <a href="#">Web Development</a>
-                              <div class="bullet"></div>
-                              <a href="#">View</a>
-                            </div>
-                          </td>
-                          <td>
-                            <a href="#"><img src="../static/dist/img/avatar/avatar-1.jpeg" alt="avatar" width="30" class="rounded-circle mr-1"> Bagus Dwi Cahya</a>
-                          </td>
-                          <td>
-                            <a class="btn btn-primary btn-action mr-1" data-toggle="tooltip" title="Edit"><i class="ion ion-edit"></i></a>
-                            <a class="btn btn-danger btn-action" data-toggle="tooltip" title="Delete"><i class="ion ion-trash-b"></i></a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Laravel 5 Tutorial - MVC
-                            <div class="table-links">
-                              in <a href="#">Web Development</a>
-                              <div class="bullet"></div>
-                              <a href="#">View</a>
-                            </div>
-                          </td>
-                          <td>
-                            <a href="#"><img src="../static/dist/img/avatar/avatar-1.jpeg" alt="avatar" width="30" class="rounded-circle mr-1"> Bagus Dwi Cahya</a>
-                          </td>
-                          <td>
-                            <a class="btn btn-primary btn-action mr-1" data-toggle="tooltip" title="Edit"><i class="ion ion-edit"></i></a>
-                            <a class="btn btn-danger btn-action" data-toggle="tooltip" title="Delete"><i class="ion ion-trash-b"></i></a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Laravel 5 Tutorial - Migration
-                            <div class="table-links">
-                              in <a href="#">Web Development</a>
-                              <div class="bullet"></div>
-                              <a href="#">View</a>
-                            </div>
-                          </td>
-                          <td>
-                            <a href="#"><img src="../static/dist/img/avatar/avatar-1.jpeg" alt="avatar" width="30" class="rounded-circle mr-1"> Bagus Dwi Cahya</a>
-                          </td>
-                          <td>
-                            <a class="btn btn-primary btn-action mr-1" data-toggle="tooltip" title="Edit"><i class="ion ion-edit"></i></a>
-                            <a class="btn btn-danger btn-action" data-toggle="tooltip" title="Delete"><i class="ion ion-trash-b"></i></a>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-      <footer class="main-footer">
-        <div class="footer-left">
-          Copyright &copy; 2018 <div class="bullet"></div> More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a>
+              </el-col>
+        </el-row>
         </div>
-        <div class="footer-right"></div>
-      </footer>
-    </div>
-    <el-dialog
-            title="用户详细"
-            :visible.sync="dialogVisible"
-            width="40%"
-            :before-close="handleClose">
-     <div>
-       <el-row :gutter="10">
-         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-           <div class="grid-content bg-purple">
-          <span>用户名:</span>  {{username}}
-           </div>
-         </el-col>
-         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-           <div class="grid-content bg-purple-light">
-          <span> 密  码:</span>  {{pwd}}
-           </div>
-         </el-col>
-       </el-row>
-     </div>
-      <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-<!--    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
-  </span>
-    </el-dialog>
+      </el-col>
+    </el-row>
   </div>
 
-  <script src="../static/dist/modules/jquery.min.js"></script>
-  <script src="../static/dist/modules/popper.js"></script>
-  <script src="../static/dist/modules/tooltip.js"></script>
-  <script src="../static/dist/modules/bootstrap/js/bootstrap.min.js"></script>
-  <script src="../static/dist/modules/nicescroll/jquery.nicescroll.min.js"></script>
-  <script src="../static/dist/modules/scroll-up-bar/dist/scroll-up-bar.min.js"></script>
-  <script src="../static/dist/js/sa-functions.js"></script>
-  
-  <script src="../static/dist/modules/chart.min.js"></script>
-  <script src="../static/dist/modules/summernote/summernote-lite.js"></script>
+<!--    <el-dialog-->
+<!--            title="用户详细"-->
+<!--            :visible.sync="dialogVisible"-->
+<!--            width="40%"-->
+<!--            :before-close="handleClose">-->
+<!--     <div>-->
+<!--       <el-row :gutter="10">-->
+<!--         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">-->
+<!--           <div class="grid-content bg-purple">-->
+<!--          <span>用户名:</span>  {{username}}-->
+<!--           </div>-->
+<!--         </el-col>-->
+<!--         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">-->
+<!--           <div class="grid-content bg-purple-light">-->
+<!--          <span> 密  码:</span>  {{pwd}}-->
+<!--           </div>-->
+<!--         </el-col>-->
+<!--       </el-row>-->
+<!--     </div>-->
+<!--      <span slot="footer" class="dialog-footer">-->
+<!--    <el-button @click="dialogVisible = false">取 消</el-button>-->
+<!--&lt;!&ndash;    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>&ndash;&gt;-->
+<!--  </span>-->
+<!--    </el-dialog>-->
 
 
-  <script src="../static/dist/js/scripts.js"></script>
-  <script src="../static/dist/js/custom.js"></script>
-  <script src="../static/dist/js/demo.js"></script>
 </body>
 </html>

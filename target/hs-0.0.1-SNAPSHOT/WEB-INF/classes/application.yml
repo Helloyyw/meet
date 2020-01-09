@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    name: ex
+    name: localhost_3306
     url: jdbc:mysql://127.0.0.1:3306/meet?serverTimezone=UTC&characterEncoding=utf-8
     username: root
     password: 1
