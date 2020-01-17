@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crk.hs.dao.JsjMapper" >
+  <resultMap id="BaseResultMap" type="com.crk.hs.entity.Jsj" >
+    <id column="bsm" property="bsm" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="DATE" />
+    <result column="placeb" property="placeb" jdbcType="VARCHAR" />
+    <result column="placea" property="placea" jdbcType="VARCHAR" />
+    <result column="carno" property="carno" jdbcType="VARCHAR" />
+    <result column="totals" property="totals" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="u_bsm" property="uBsm" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bsm, time,u_bsm, placeb, placea,carno, totals, content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from m_jsj
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from m_jsj
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.crk.hs.entity.Jsj" >
+    insert into m_jsj (bsm, u_bsm,time, placeb,
+      placea,carno, totals, content
+      )
+    values (#{bsm,jdbcType=VARCHAR},#{uBsm,jdbcType=VARCHAR}, #{time,jdbcType=DATE} , #{placeb,jdbcType=VARCHAR},
+      #{placea,jdbcType=VARCHAR},#{carno,jdbcType=VARCHAR}, #{totals,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.crk.hs.entity.Jsj" >
+    insert into m_jsj
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bsm != null" >
+        bsm,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+       <if test="uBsm != null" >
+         u_bsm,
+      </if>
+      <if test="placeb != null" >
+        placeb,
+      </if>
+      <if test="placea != null" >
+        placea,
+      </if>
+         <if test="carno != null" >
+           carno,
+      </if>
+      <if test="totals != null" >
+        totals,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bsm != null" >
+        #{bsm,jdbcType=VARCHAR},
+      </if>
+      <if test="uBsm != null" >
+        #{uBsm,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=DATE},
+      </if>
+      <if test="placeb != null" >
+        #{placeb,jdbcType=VARCHAR},
+      </if>
+      <if test="placea != null" >
+        #{placea,jdbcType=VARCHAR},
+      </if>
+          <if test="carno != null" >
+        #{carno,jdbcType=VARCHAR},
+      </if>
+      <if test="totals != null" >
+        #{totals,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crk.hs.entity.Jsj" >
+    update m_jsj
+    <set >
+      <if test="time != null" >
+        time = #{time,jdbcType=DATE},
+      </if>
+        <if test="uBsm != null" >
+        u_bsm = #{uBsm,jdbcType=VARCHAR},
+      </if>
+      <if test="placeb != null" >
+        placeb = #{placeb,jdbcType=VARCHAR},
+      </if>
+      <if test="placea != null" >
+        placea = #{placea,jdbcType=VARCHAR},
+      </if>
+         <if test="carno != null" >
+           carno = #{placea,jdbcType=VARCHAR},
+      </if>
+      <if test="totals != null" >
+        totals = #{totals,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crk.hs.entity.Jsj" >
+    update m_jsj
+    set  u_bsm = #{uBsm,jdbcType=VARCHAR},
+      time = #{time,jdbcType=DATE},
+      placeb = #{placeb,jdbcType=VARCHAR},
+      placea = #{placea,jdbcType=VARCHAR},
+      carno = #{carno,jdbcType=VARCHAR},
+      totals = #{totals,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR}
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </update>
+  <select id="getJsjList" resultMap="BaseResultMap" parameterType="com.github.pagehelper.Page">
+    select
+    <include refid="Base_Column_List"/>
+    from m_jsj
+  </select>
+  <select id="getJsjBycarno" resultMap="BaseResultMap" parameterType="com.github.pagehelper.Page">
+    select
+    <include refid="Base_Column_List"/>
+    from m_jsj
+    where carno = #{carno,jdbcType=VARCHAR}
+  </select>
+</mapper>

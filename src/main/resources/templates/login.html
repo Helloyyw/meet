@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" name="viewport">
+  <title>登录页</title>
+
+
+  <link rel="stylesheet" href="../static/dist/modules/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/dist/modules/ionicons/css/ionicons.min.css">
+  <link rel="stylesheet" href="../static/dist/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">
+  <link rel="stylesheet" href="../static/dist/css/demo.css">
+  <link rel="stylesheet" href="../static/dist/css/style.css">
+<!--  vue-->
+  <script src="../static/js/jquery-2.2.4.js"></script>
+  <script src="../static/Vue/vue.js"></script>
+  <script src="../static/element-ui/lib/index.js"></script>
+  <link rel="stylesheet" href="../static/element-ui/lib/theme-chalk/index.css">
+  <script type="text/javascript">
+    var vm;
+    window.onload = function () {
+      vm = new Vue({
+        el: "#app",
+        mounted: function () {
+
+        },
+        data: {
+          username: '用户名',
+          password: '密码',
+        },
+        methods: {
+          //登录js
+          login: function () {
+            var then  = this;
+
+            var list = {
+              'username' :then.username,
+              'password' :then.password
+            }
+              $.ajax({
+                //请求方式
+                type : "POST",
+                //请求的媒体类型
+                contentType: "application/json;charset=UTF-8",
+                dataType:"json",
+                async:false,
+                //请求地址 http://localhost:8083/meet+ 后台请求地址
+                url:  Common.GetAppPath()+"/index/check",
+                //数据，json字符串
+                data: Common.Encode(JSON.stringify(list)),
+                //请求成功
+                success : function(result) {
+                  var userinfo  = result.data;
+                 if(!(userinfo instanceof Object)){
+                   userinfo =  JSON.parse(userinfo);
+                 }
+                 //把返回来的用户信息存入session中
+                  Common.SetCookie("userinfo",JSON.stringify(userinfo));
+                  window.location.href=Common.GetAppPath()+"/index.html";
+                },
+                //请求失败，包含具体的错误信息
+                error : function(e){
+                  alert("登录请求失败");
+                  console.log(e.status);
+                  console.log(e.responseText);
+                }
+              });
+          }
+
+        }
+      });
+    }
+  </script>
+</head>
+
+<body>
+  <div id="app">
+    <section class="section">
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
+            <div class="login-brand">
+              会议接待综合管理系统
+            </div>
+
+            <div class="card card-primary">
+              <div class="card-header"><h4>登录页</h4></div>
+
+              <div class="card-body">
+                <form method="POST" action="#" class="needs-validation" novalidate="">
+                  <div class="form-group">
+                    <label for="useranme">用户名</label>
+                    <input id="useranme" type="useranme" class="form-control" v-model="username" name="useranme" tabindex="1" required autofocus>
+                    <div class="invalid-feedback">
+                    请输入你的用户名
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="password" class="d-block">密 码
+                      <div class="float-right">
+                        <a href="forgot.html">
+                          忘记密码?
+                        </a>
+                      </div>
+                    </label>
+                    <input id="password"  v-model="password" type="password" class="form-control" name="password" tabindex="2" required>
+                    <div class="invalid-feedback">
+                      请输入你的密码
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" name="remember" class="custom-control-input" tabindex="3" id="remember-me">
+                      <label class="custom-control-label" for="remember-me">记住我</label>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <button type="button" class="btn btn-primary btn-block" tabindex="4" @click="login">
+                      登录
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+<!--            这里不需要注册功能-->
+<!--            <div class="mt-5 text-muted text-center">-->
+<!--              还没有账户? <a href="../static/templates/register.html">Create One</a>-->
+<!--            </div>-->
+            <div class="simple-footer">
+              Copyright &copy; 雷明珠 重庆人文科技学院 2016 毕业设计
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="../static/dist/modules/jquery.min.js"></script>
+  <script src="../static/js/Jquery.Common.js"></script>
+  <script src="../static/dist/modules/popper.js"></script>
+  <script src="../static/dist/modules/tooltip.js"></script>
+  <script src="../static/dist/modules/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/dist/modules/nicescroll/jquery.nicescroll.min.js"></script>
+<!--  <script src="../dist/modules/moment.min.js"></script>-->
+  <script src="../static/dist/modules/scroll-up-bar/dist/scroll-up-bar.min.js"></script>
+  <script src="../static/dist/js/sa-functions.js"></script>
+  <script src="../static/dist/js/scripts.js"></script>
+  <script src="../static/dist/js/custom.js"></script>
+  <script src="../static/dist/js/demo.js"></script>
+</body>
+</html>

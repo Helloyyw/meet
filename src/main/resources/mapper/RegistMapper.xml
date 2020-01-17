@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crk.hs.dao.RegistMapper" >
+  <resultMap id="BaseResultMap" type="com.crk.hs.entity.Regist" >
+    <id column="bsm" property="bsm" jdbcType="VARCHAR" />
+    <result column="m_title" property="mTitle" jdbcType="VARCHAR" />
+    <result column="u_name" property="uName" jdbcType="VARCHAR" />
+    <result column="u_cardid" property="uCardid" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="begintime" property="begintime" jdbcType="DATE" />
+    <result column="overtime" property="overtime" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bsm, m_title, u_name, u_cardid, content, begintime, overtime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from m_regist
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from m_regist
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.crk.hs.entity.Regist" >
+    insert into m_regist (bsm, m_title, u_name, 
+      u_cardid, content, begintime, 
+      overtime)
+    values (#{bsm,jdbcType=VARCHAR}, #{mTitle,jdbcType=VARCHAR}, #{uName,jdbcType=VARCHAR}, 
+      #{uCardid,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{begintime,jdbcType=DATE}, 
+      #{overtime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.crk.hs.entity.Regist" >
+    insert into m_regist
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bsm != null" >
+        bsm,
+      </if>
+      <if test="mTitle != null" >
+        m_title,
+      </if>
+      <if test="uName != null" >
+        u_name,
+      </if>
+      <if test="uCardid != null" >
+        u_cardid,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="begintime != null" >
+        begintime,
+      </if>
+      <if test="overtime != null" >
+        overtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bsm != null" >
+        #{bsm,jdbcType=VARCHAR},
+      </if>
+      <if test="mTitle != null" >
+        #{mTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="uName != null" >
+        #{uName,jdbcType=VARCHAR},
+      </if>
+      <if test="uCardid != null" >
+        #{uCardid,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="begintime != null" >
+        #{begintime,jdbcType=DATE},
+      </if>
+      <if test="overtime != null" >
+        #{overtime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crk.hs.entity.Regist" >
+    update m_regist
+    <set >
+      <if test="mTitle != null" >
+        m_title = #{mTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="uName != null" >
+        u_name = #{uName,jdbcType=VARCHAR},
+      </if>
+      <if test="uCardid != null" >
+        u_cardid = #{uCardid,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="begintime != null" >
+        begintime = #{begintime,jdbcType=DATE},
+      </if>
+      <if test="overtime != null" >
+        overtime = #{overtime,jdbcType=DATE},
+      </if>
+    </set>
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crk.hs.entity.Regist" >
+    update m_regist
+    set m_title = #{mTitle,jdbcType=VARCHAR},
+      u_name = #{uName,jdbcType=VARCHAR},
+      u_cardid = #{uCardid,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      begintime = #{begintime,jdbcType=DATE},
+      overtime = #{overtime,jdbcType=DATE}
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </update>
+</mapper>

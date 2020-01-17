@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" name="viewport">
+    <title>用户详细信息</title>
+    <script src="../static/js/jquery-2.2.4.js"></script>
+    <script src="../static/Vue/vue.js"></script>
+    <script src="../static/element-ui/lib/index.js"></script>
+    <script src="../static/js/Jquery.Common.js"></script>
+    <link rel="stylesheet" href="../static/element-ui/lib/theme-chalk/index.css">
+    <script>
+        var vm;
+        window.onload = function () {
+            vm = new Vue({
+                el: "#app",
+                mounted: function () {
+                    this.bingUserinfo();
+                },
+                data: {
+
+                },
+                methods: {
+                    //展示用户详细信息
+                    bingUserinfo: function () {
+                        var useinfo = Common.GetCookie("userinfo");
+                        console.log(JSON.parse(useinfo));
+                        useinfo =  JSON.parse(useinfo);
+                        if(!(useinfo.username == 'admin')){
+                            this.username = useinfo.username;
+                        }
+                    }
+
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div id="app">
+
+    </div>
+</body>
+</html>

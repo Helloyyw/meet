@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crk.hs.dao.HyxxMapper" >
+  <resultMap id="BaseResultMap" type="com.crk.hs.entity.Hyxx" >
+    <id column="bsm" property="bsm" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="totals" property="totals" jdbcType="INTEGER" />
+    <result column="mroom_bsm" property="mroomBsm" jdbcType="VARCHAR" />
+    <result column="overtime" property="overTime" jdbcType="DATE" />
+    <result column="starttime" property="startTime" jdbcType="DATE" />
+    <result column="u_bsm" property="uBsm" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bsm, name, totals,starttime, overtime,mroom_bsm, u_bsm, content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from m_hyxx
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </select>
+  <select id="getHyByname" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from m_hyxx
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from m_hyxx
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.crk.hs.entity.Hyxx" >
+    insert into m_hyxx (bsm, name, totals, startTime, overTime,
+      mroom_bsm, u_bsm, content)
+    values (#{bsm,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{totals,jdbcType=INTEGER}, 
+      #{startTime,jdbcType=DATE}, #{overTime,jdbcType=DATE},#{mroomBsm,jdbcType=VARCHAR},
+       #{uBsm,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.crk.hs.entity.Hyxx" >
+    insert into m_hyxx
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bsm != null" >
+        bsm,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="totals != null" >
+        totals,
+      </if>
+         <if test="starttime != null" >
+           starttime,
+      </if>
+         <if test="overtime != null" >
+           overtime,
+      </if>
+      <if test="mroomBsm != null" >
+        mroom_bsm,
+      </if>
+      <if test="uBsm != null" >
+        u_bsm,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bsm != null" >
+        #{bsm,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="totals != null" >
+        #{totals,jdbcType=INTEGER},
+      </if>
+        <if test="starttime != null" >
+        #{starttime,jdbcType=DATE},
+      </if>
+        <if test="overtime != null" >
+        #{overtime,jdbcType=DATE},
+      </if>
+      <if test="mroomBsm != null" >
+        #{mroomBsm,jdbcType=VARCHAR},
+      </if>
+      <if test="uBsm != null" >
+        #{uBsm,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crk.hs.entity.Hyxx" >
+    update m_hyxx
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="totals != null" >
+        totals = #{totals,jdbcType=INTEGER},
+      </if>
+       <if test="starttime != null" >
+         starttime = #{totals,jdbcType=DATE},
+      </if>
+       <if test="overtime != null" >
+         overtime = #{totals,jdbcType=DATE},
+      </if>
+      <if test="mroomBsm != null" >
+        mroom_bsm = #{mroomBsm,jdbcType=VARCHAR},
+      </if>
+      <if test="uBsm != null" >
+        u_bsm = #{uBsm,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crk.hs.entity.Hyxx" >
+    update m_hyxx
+    set name = #{name,jdbcType=VARCHAR},
+      totals = #{totals,jdbcType=INTEGER},
+      starttime = #{startTime,jdbcType=DATE},
+       overtime = #{overTime,jdbcType=DATE},
+      mroom_bsm = #{mroomBsm,jdbcType=VARCHAR},
+      u_bsm = #{uBsm,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR}
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </update>
+  <select id="getHyxxList" resultMap="BaseResultMap" parameterType="com.github.pagehelper.Page">
+    select
+    <include refid="Base_Column_List"/>
+    from m_hyxx
+  </select>
+</mapper>

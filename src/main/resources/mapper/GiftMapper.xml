@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crk.hs.dao.GiftMapper" >
+  <resultMap id="BaseResultMap" type="com.crk.hs.entity.Gift" >
+    <id column="bsm" property="bsm" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="totals" property="totals" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="kcsl" property="kcsl" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bsm, name, totals, address, type, price, kcsl, content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from m_gift
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from m_gift
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.crk.hs.entity.Gift" >
+    insert into m_gift (bsm, name, totals, 
+      address, type, price, 
+      kcsl, content)
+    values (#{bsm,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{totals,jdbcType=INTEGER}, 
+      #{address,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+      #{kcsl,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.crk.hs.entity.Gift" >
+    insert into m_gift
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bsm != null" >
+        bsm,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="totals != null" >
+        totals,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="kcsl != null" >
+        kcsl,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bsm != null" >
+        #{bsm,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="totals != null" >
+        #{totals,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="kcsl != null" >
+        #{kcsl,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crk.hs.entity.Gift" >
+    update m_gift
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="totals != null" >
+        totals = #{totals,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="kcsl != null" >
+        kcsl = #{kcsl,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crk.hs.entity.Gift" >
+    update m_gift
+    set name = #{name,jdbcType=VARCHAR},
+      totals = #{totals,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      kcsl = #{kcsl,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR}
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </update>
+  <select id="getGiftList" resultMap="BaseResultMap" parameterType="com.github.pagehelper.Page">
+    select
+    <include refid="Base_Column_List"/>
+    from m_gift
+  </select>
+  <select id="getGiftBynameAndtype" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List"/>
+    from m_gift where 1=1
+
+    <if test="name != null and name != ''" >
+      and  name = #{name,jdbcType=VARCHAR}
+    </if>
+
+    <if test="type != null  and type != ''" >
+      and  type = #{type,jdbcType=VARCHAR}
+    </if>
+
+  </select>
+</mapper>

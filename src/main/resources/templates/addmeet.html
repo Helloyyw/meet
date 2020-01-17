@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" name="viewport">
+    <title>添加会议</title>
+    <script src="../static/js/jquery-2.2.4.js"></script>
+    <script src="../static/Vue/vue.js"></script>
+    <script src="../static/element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="../static/element-ui/lib/theme-chalk/index.css">
+    <script src="../static/js/Jquery.Common.js"></script>
+    <style>
+        .transfer-footer {
+            margin-left: 20px;
+            padding: 6px 5px;
+        }
+        .demo-table-expand {
+            font-size: 0;
+        }
+        .demo-table-expand label {
+            width: 90px;
+            color: #99a9bf;
+        }
+        .demo-table-expand .el-form-item {
+            margin-right: 0;
+            margin-bottom: 0;
+            width: 50%;
+        }
+    </style>
+    <script type="text/javascript">
+        var vm;
+        window.onload = function () {
+            vm = new Vue({
+                el: "#app",
+                mounted: function () {
+                    this.initHyList(this.pageNum,this.pageSize)
+                },
+                data: {
+                    pageNum: 1,
+                    pageSize: 10,
+                    total:0,
+                    form: {
+
+                    },
+                    form2: {
+                        name:'',
+                        totals:'',
+                        mroomBsm:'',//会议室bsm
+                        mroomname:'',
+                        content:'',
+                        uBsm:[] ,//用来存储用户的标识码
+                        bsmStr:"",
+                        startTime:'',
+                        overTime:''
+                    },
+                    form1: {//查询使用的表单
+                        name:'',
+                    },
+                    qdbVisible: false,
+                    tableData: [],
+                    usernames:[],
+                    filters1:[],
+                    filters:[],
+                    options: [],//下拉框的值 存放的是会议室的数组对象
+                    qdtable:{},//存放签到表的数据
+                    qdtableusername:[],//存放签到表的用户名
+                    dialogVisible: false,
+                    dialogVisible1: false,
+                    rules: {
+                        name: [
+                            { required: true, message: '请输入会议名称', trigger: 'blur' },
+                            { min: 3, max: 10, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                        ],
+                        totals: [
+                            { required: true, message: '请输入参会人数', trigger: 'blur' },
+                        ],
+                        startTime: [
+                            { required: true, message: '请输入开始时间', trigger: 'blur' },
+                        ],
+                        overTime: [
+                            { required: true, message: '请输入结束时间', trigger: 'blur' },
+                        ],
+                    }
+
+                },
+                methods: {
+                    filterMethod: function (query, item) {
+                        return item.pinyin.indexOf(query) > -1;
+                    },
+                    //登录js
+                    initHyList: function (pageNum, pageSize) {
+                        let then = this;
+                        let list = {
+                            'pageNum': then.pageNum,
+                            'pageSize': then.pageSize
+                        }
+                        $.ajax({
+                            //请求方式
+                            type: "POST",
+                            //请求的媒体类型
+                            contentType: "application/json;charset=UTF-8",
+                            dataType: "json",
+                            async: false,
+                            //请求地址 http://localhost:8083/meet+ 后台请求地址
+                            url: Common.GetAppPath() + "/hyxx/getHyList",
+                            //数据，json字符串
+                            data: Common.Encode(JSON.stringify(list)),
+                            //请求成功
+                            success: function (result) {
+                                var userList = result.data;
+                                if (!(userList instanceof Object)) {
+                                    userList = JSON.parse(userList);
+                                }
+                                //把返回来的用户列表加载到表格
+                                let listUser = userList.list;
+                                then.tableData = listUser;
+                                var fil = [];
+                                var fil2 = [];
+
+                                //给时间搜索filters1赋值
+                                for(var i = 0;i<listUser.length;i++){
+
+                                    then.tableData[i].startTime = then.dateFormat(listUser[i].startTime);
+                                    then.tableData[i].overTime = then.dateFormat(listUser[i].overTime);
+                                    var ff = {
+                                        text: then.dateFormat(listUser[i].startTime),
+                                        value:then.dateFormat(listUser[i].startTime)
+                                    }
+                                    fil.push(ff);
+                                    var ff2 = {
+                                        text: then.dateFormat(listUser[i].overTime),
+                                        value:then.dateFormat(listUser[i].overTime)
+                                    }
+                                    fil2.push(ff2)
+                                }
+                                then.filters = fil;
+                                then.filters1 = fil2;
+                                then.total = listUser.length;
+                                console.log(listUser);
+
+                            },
+                            //请求失败，包含具体的错误信息
+                            error: function (e) {
+                                alert("登录请求失败");
+                                console.log(e.status);
+                                console.log(e.responseText);
+                            }
+                        });
+                    },
+                    open: function (index, rows) {
+                        this.$alert('确定要删除吗?', '提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                rows.splice(index, 1);
+                                this.$message({
+                                    type: 'info',
+                                    message: `action: 删除成功`
+                                });
+                            }
+                        });
+                    },
+                    handleSizeChange: function (val) {//分页改变每页显示多少条
+                        this.pageSize = val;
+                        this.initHyList(this.pageNum, this.pageSize);
+                        console.log(`每页 ${val} 条`);
+                    },
+                    handleCurrentChange: function (val) { //跳转到指定页面
+                        this.pageNum = val;
+                        this.initHyList(this.pageNum, this.pageSize);
+                        console.log(`当前页: ${val}`);
+
+                    },
+                    handleClose: function (done) {
+                        this.$confirm('确认关闭？')
+                            .then(_ => {
+                                done();
+                            })
+                            .catch(_ => {
+                            });
+                    },//关闭弹框
+                    editRow: function (index, rows) {
+                        var then = this;
+                        this.initSelect();//下拉框赋值
+                        // 选择框赋值
+                        this.initUserNames();
+                        // this.uBsm =
+                        this.dialogVisible = true;
+                        var hybsm =
+                            {
+                                "hybsm":rows[index].bsm
+                            };//这里需要去后台查一次
+
+                        $.ajax({
+                            //请求方式
+                            type: "POST",
+                            //请求的媒体类型
+                            contentType: "application/json;charset=UTF-8",
+                            dataType: "json",
+                            async: false,
+                            //请求地址 http://localhost:8083/meet+ 后台请求地址
+                            url: Common.GetAppPath() + "/hyxx/getHyxxBybsm",
+                            //数据，json字符串
+                            data: Common.Encode(JSON.stringify(hybsm)),
+                            //请求成功
+                            success: function (result) {
+                                var hyxx = result.data;
+                                if (!(hyxx instanceof Object)) {
+                                    hyxx = JSON.parse(hyxx);
+                                }
+                                //把返回来的用户列表加载到表格
+                                then.form2.bsm = hyxx.bsm;
+                                then.form2.name = hyxx.name;
+                                then.form2.totals = hyxx.totals;
+                                then.form2.mroomBsm = hyxx.mroomBsm;
+                                then.form2.content = hyxx.content;
+                                then.form2.uBsm = hyxx.uBsm.split(",");
+                                then.form2.name = hyxx.name;
+                                then.form2.startTime = hyxx.startTime;
+                                then.form2.overTime = hyxx.overTime;
+                            },
+                            //请求失败，包含具体的错误信息
+                            error: function (e) {
+                                alert("登录请求失败");
+                                console.log(e.status);
+                                console.log(e.responseText);
+                            }
+                        });
+
+                    },
+                    pritQiandao: function (index, rows){
+                        var then = this;
+                        then.qdtable = rows[index];
+                        var users = rows[index].uBsm;
+                        users =   users.replace("[","");
+                        users =   users.replace("]","");
+                        console.log(users);
+                        var userList =  users.split(",");
+                        then.qdtableusername =  userList;
+                        then.qdbVisible = true;
+                    },
+                    dateFormat:function(time) {
+                        var date=new Date(time);
+                        var year=date.getFullYear();
+                        /* 在日期格式中，月份是从0开始的，因此要加0
+                         * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
+                         * */
+                        var month= date.getMonth()+1<10 ? "0"+(date.getMonth()+1) : date.getMonth()+1;
+                        var day=date.getDate()<10 ? "0"+date.getDate() : date.getDate();
+                        var hours=date.getHours()<10 ? "0"+date.getHours() : date.getHours();
+                        var minutes=date.getMinutes()<10 ? "0"+date.getMinutes() : date.getMinutes();
+                        var seconds=date.getSeconds()<10 ? "0"+date.getSeconds() : date.getSeconds();
+                        // 拼接
+                        return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
+                    },
+                    ////修改信息弹出框
+                    onSubmit(formName) {
+                        let then = this;
+                        this.$refs[formName].validate((valid) => {
+                            if (valid) {
+                                //先验证会议室和参会人员选好没 同时判断 参会人数是不是符合
+                                if(then.form2.mroomBsm == ''){
+                                    alert("请选择会议室");
+                                    return;
+                                }
+                                if(then.form2.uBsm.length <= 0){
+                                    alert("请选择参会人员");
+                                    return;
+                                }
+                                if(then.form2.uBsm.length != then.form2.totals){
+                                    alert("请确保参会人数和会议总人数一致");
+                                    return;
+                                }
+                                alert('submit!');
+                                var bsmList = then.form2.uBsm;//数组
+                                var bsmStr = "";
+                                for( var i = 0; i <bsmList.length; i++) {
+                                    if(i == bsmList.length -1 ){
+                                        bsmStr+=  bsmList[i];
+                                        break;
+                                    }
+                                    bsmStr+=  bsmList[i]+","
+                                }
+                                then.form2.bsmStr = bsmStr;
+                                //验证统过开始请求后台接口
+                                $.ajax({
+                                    //请求方式
+                                    type: "POST",
+                                    //请求的媒体类型
+                                    contentType: "application/json;charset=UTF-8",
+                                    dataType: "json",
+                                    async: false,
+                                    //请求地址 http://localhost:8083/meet+ 后台请求地址
+                                    url: Common.GetAppPath() + "/hyxx/updateHyxx",
+                                    //数据，json字符串
+                                    data: Common.Encode(JSON.stringify(this.form2)),
+                                    //请求成功
+                                    success: function (result) {
+                                        let code = result.code;
+                                        if (code == 0 || code == "0") {
+                                            alert("更新成功");
+                                            then.dialogVisible = false;
+                                            then.reset();
+                                        } else {
+                                            alert("更新失败,请联系管理员");
+                                        }
+                                    },
+                                    //请求失败，包含具体的错误信息
+                                    error: function (e) {
+                                        alert("请求失败");
+                                        console.log(e.status);
+                                        console.log(e.responseText);
+                                    }
+                                });
+                            } else {
+                                alert('请按照要求填写完整的信息');
+                                return false;
+                            }
+                        });
+                    },
+                    search: function () {
+                        let then = this;
+                        let list = {
+                            'name': then.form1.name,
+                            'cardid': then.form1.cardid
+                        }
+                        $.ajax({
+                            //请求方式
+                            type: "POST",
+                            //请求的媒体类型
+                            contentType: "application/json;charset=UTF-8",
+                            dataType: "json",
+                            async: false,
+                            //请求地址 http://localhost:8083/meet+ 后台请求地址
+                            url: Common.GetAppPath() + "/hyxx/searchHyxx",
+                            //数据，json字符串
+                            data: Common.Encode(JSON.stringify(list)),
+                            //请求成功
+                            success: function (result) {
+                                var userList = result.data;
+                                if (!(userList instanceof Object)) {
+                                    userList = JSON.parse(userList);
+                                }
+                                //把返回来的用户列表加载到表格
+                                console.log(userList);
+                                let listUser = userList.list;
+                                //移除参会人员的信息
+                                for( var i = 0; i < listUser.length; i++) {
+                                    if(listUser[i].acl == 0 || listUser[i].acl == '0'){
+                                        listUser.splice(i,1);
+                                    }
+                                }
+                                then.tableData = listUser;
+                                then.tableData.startTime = then.dateFormat(listUser.startTime);
+                                then.tableData.overTime = then.dateFormat(listUser.overTime);
+
+                                then.total = listUser.length;
+                            },
+                            //请求失败，包含具体的错误信息
+                            error: function (e) {
+                                alert("登录请求失败");
+                                console.log(e.status);
+                                console.log(e.responseText);
+                            }
+                        });
+                    },
+                    reset: function () {
+                        this.pageNum = 1;
+                        this.pageSize = 10;
+                        this.initHyList(this.pageNum, this.pageSize)
+                    },
+                    adduser: function () {
+                        this.initSelect();//下拉框赋值
+                        // 选择框赋值
+                        this.initUserNames();
+                        this.dialogVisible1 = true;
+                    },
+                    initSelect: function(){
+                         let then = this;
+                        let list = {
+                            'pageNum': then.pageNum,
+                            'pageSize': 20
+                        }
+                        $.ajax({
+                            //请求方式
+                            type: "POST",
+                            //请求的媒体类型
+                            contentType: "application/json;charset=UTF-8",
+                            dataType: "json",
+                            async: false,
+                            //请求地址 http://localhost:8083/meet+ 后台请求地址
+                            url: Common.GetAppPath() + "/room/getRoomList",
+                            //数据，json字符串
+                            data: Common.Encode(JSON.stringify(list)),
+                            //请求成功
+                            success: function (result) {
+                                var userList = result.data;
+                                if (!(userList instanceof Object)) {
+                                    userList = JSON.parse(userList);
+                                }
+                                //把返回来的用户列表加载到表格
+                                var listUser = userList.list;
+
+                                for( var i = 0; i < listUser.length; i++) {
+
+                                    if(listUser[i].status == 1 || listUser[i].status == '1'){
+                                        listUser[i].status  = '使用中';
+                                    }else if(listUser[i].status == 2 || listUser[i].status == '2'){
+                                        listUser[i].status  = '空闲';
+                                    }else if(listUser[i].status == 3 || listUser[i].status == '3'){
+                                        listUser[i].status  = '打扫中';
+                                    }
+                                }
+                                //删除住宿的房间
+                                listUser = listUser.filter(function(item) {
+                                    return item.type != "2";
+                                });
+                                then.options = listUser;
+                                console.log(then.options);
+                            },
+                            //请求失败，包含具体的错误信息
+                            error: function (e) {
+                                alert("getRoomList");
+                                console.log(e.status);
+                                console.log(e.responseText);
+                            }
+                        });
+                    },
+                    initUserNames: function(){
+                        let then = this;
+                        let list = {
+                            'pageNum': then.pageNum,
+                            'pageSize': 30
+                        }
+                        $.ajax({
+                            //请求方式
+                            type: "POST",
+                            //请求的媒体类型
+                            contentType: "application/json;charset=UTF-8",
+                            dataType: "json",
+                            async: false,
+                            //请求地址 http://localhost:8083/meet+ 后台请求地址
+                            url: Common.GetAppPath() + "/user/getUserList",
+                            //数据，json字符串
+                            data: Common.Encode(JSON.stringify(list)),
+                            //请求成功
+                            success: function (result) {
+                                var userList = result.data;
+                                if (!(userList instanceof Object)) {
+                                    userList = JSON.parse(userList);
+                                }
+                                //把返回来的用户列表加载到表格
+                                let listUser = userList.list;
+                                var useritems = [];
+
+                                for(var i =0;i<listUser.length;i++){
+                                    var useritem = {};
+                                    useritem.label = listUser[i].name;
+                                    useritem.key = listUser[i].bsm;
+                                    useritem.pinyin = listUser[i].level;
+                                    useritems.push(useritem);
+                                }
+                                then.usernames = useritems;
+                            },
+                            //请求失败，包含具体的错误信息
+                            error: function (e) {
+                                alert("getUserList请求失败");
+                                console.log(e.status);
+                                console.log(e.responseText);
+                            }
+                        });
+                    },
+                    //添加信息弹出框
+                    submitForm: function (formName) {
+                        let then = this;
+                        this.$refs[formName].validate((valid) => {
+                            if (valid) {
+                                //先验证会议室和参会人员选好没 同时判断 参会人数是不是符合
+                                if(then.form2.mroomBsm == ''){
+                                    alert("请选择会议室");
+                                    return;
+                                }
+                                if(then.form2.uBsm.length <= 0){
+                                    alert("请选择参会人员");
+                                    return;
+                                }
+                                if(then.form2.uBsm.length != then.form2.totals){
+                                    alert("请确保参会人数和会议总人数一致");
+                                    return;
+                                }
+                                alert('submit!');
+                                var bsmList = then.form2.uBsm;//数组
+                                var bsmStr = "";
+                                for( var i = 0; i <bsmList.length; i++) {
+                                    if(i == bsmList.length -1 ){
+                                        bsmStr+=  bsmList[i];
+                                        break;
+                                    }
+                                    bsmStr+=  bsmList[i]+","
+                                }
+                                then.form2.bsmStr = bsmStr;
+                                console.log("表单参数;;;=="+then.form2);
+                                //验证统过开始请求后台接口
+                                $.ajax({
+                                    //请求方式
+                                    type: "POST",
+                                    //请求的媒体类型
+                                    contentType: "application/json;charset=UTF-8",
+                                    dataType: "json",
+                                    async: false,
+                                    //请求地址 http://localhost:8083/meet+ 后台请求地址
+                                    url: Common.GetAppPath() + "/hyxx/addHyxx",
+                                    //数据，json字符串
+                                    data: Common.Encode(JSON.stringify(this.form2)),
+                                    //请求成功
+                                    success: function (result) {
+                                        let code = result.code;
+                                        if (code == 0 || code == "0") {
+                                            alert("添加成功");
+                                            then.dialogVisible1 = false;
+                                            then.reset();
+                                        } else {
+                                            alert("添加失败,请联系管理员");
+                                        }
+
+                                    },
+                                    //请求失败，包含具体的错误信息
+                                    error: function (e) {
+                                        alert("请求失败");
+                                        console.log(e.status);
+                                        console.log(e.responseText);
+                                    }
+                                });
+                            } else {
+                                alert('请按照要求填写完整的信息');
+                                return false;
+                            }
+                        });
+                    },
+                    resetForm: function (formName) {
+                        this.$refs[formName].resetFields();
+                    },
+                    onSelectedDrug: function(event,item) {
+                        console.log('我是下拉框的值'+event);
+                    },
+                    filterHandler: function(value, row, column) {
+                        const property = column['property'];
+                        return row[property] === value;
+                    },
+                    //打印签到表
+                    printDiv: function () {
+                        var head_str = "<html><head><title></title></head><body>"; //先生成头部
+                        var foot_str = "</body></html>"; //生成尾部
+                        var older = document.body.innerHTML;
+                        var new_str = document.getElementById('qdbtable').innerHTML; //获取指定打印区域
+                        var old_str = document.body.innerHTML; //获得原本页面的代码
+                        document.body.innerHTML = head_str + new_str + foot_str; //构建新网页
+                        window.print(); //打印刚才新建的网页
+                        window.location.reload();
+                        //  document.body.innerHTML = older; //将网页还原
+                        //
+                        // return false;
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div id="app">
+    <div id="search">
+        <el-card>
+            <el-row :gutter="10">
+                <el-form ref="form1" :model="form1" label-width="150px">
+                    <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
+                        <el-form-item label="会议名称">
+                            <el-input v-model="form1.name"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
+                        <el-button type="primary" @click="search()">查询</el-button>
+                        <el-button  @click="reset()">重置</el-button>
+                        <el-button  @click="adduser()">添加会议</el-button>
+                    </el-col>
+                </el-form>
+            </el-row>
+        </el-card>
+    </div>
+    <div id="userTable" style="padding: 5px">
+        <el-table
+                :data="tableData"
+                style="width: 100%">
+            <el-table-column type="expand">
+                <template slot-scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item label="会议名称">
+                            <span>{{ props.row.name }}</span>
+                        </el-form-item>
+                        <el-form-item label="会议标识码">
+                            <span>{{ props.row.bsm }}</span>
+                        </el-form-item>
+                        <el-form-item label="会议总人数">
+                            <span>{{ props.row.totals }}</span>
+                        </el-form-item>
+                        <el-form-item label="会议室信息">
+                            <span>{{ props.row.mroomBsm }}</span>
+                        </el-form-item>
+                        <el-form-item label="会议备注">
+                            <span>{{ props.row.content }}</span>
+                        </el-form-item>
+                        <el-form-item label="参会人信息">
+                            <span>{{ props.row.uBsm }}</span>
+                        </el-form-item>
+                        <el-form-item label="开始时间">
+                            <span>{{ dateFormat(props.row.startTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="结束时间">
+                            <span>{{ dateFormat(props.row.overTime) }}</span>
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="会议名称(主题)"
+                    prop="name">
+            </el-table-column>
+            <el-table-column
+                    label="会议总人数"
+                    prop="totals">
+            </el-table-column>
+            <el-table-column
+                    label="会议室信息"
+                    prop="mroomBsm">
+            </el-table-column>
+            <el-table-column
+                    label="开始时间"
+                    prop="startTime"
+                    sortable
+                    column-key="startTime"
+                    :filters="filters"
+                    :filter-method="filterHandler"
+                  >
+            </el-table-column>
+            <el-table-column
+                    label="结束时间"
+                    prop="overTime"
+                    sortable
+                    column-key="overTime"
+                    :filters="filters1"
+                    :filter-method="filterHandler">
+            </el-table-column>
+            <el-table-column
+                    label="会议备注"
+                    prop="content">
+            </el-table-column>
+            <el-table-column
+                    fixed="right"
+                    label="操作"
+                    width="200">
+                <template slot-scope="scope">
+                    <el-button
+                            @click.native.prevent="open(scope.$index, tableData)"
+                            type="text"
+                            size="small"
+                            color="red">
+                        删除
+                    </el-button>
+                    <el-button
+                            @click.native.prevent="editRow(scope.$index, tableData)"
+                            type="text"
+                            size="small">
+                        详情编辑
+                    </el-button>
+                    <el-button
+                            @click.native.prevent="pritQiandao(scope.$index, tableData)"
+                            type="text"
+                            size="small">
+                        签到表
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+    <!--        分页-->
+    <div class="block">
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="pageNum"
+                :page-sizes="[10, 20, 30, 40]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+        </el-pagination>
+    </div>
+    <!--        修改信息弹出框-->
+    <el-dialog
+            title="提示"
+            :visible.sync="dialogVisible"
+            width="80%"
+            :before-close="handleClose">
+        <div id="userInfo">
+            <el-row :gutter="20">
+                <el-form ref="form2" :model="form2" :rules="rules"  label-width="150px">
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                        <el-form-item label="会议名称(主题)"  prop="name">
+                            <el-input v-model="form2.name"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                        <el-form-item label="参会人数"  prop="totals">
+                            <el-input v-model="form2.totals"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                        <el-form-item label="开始时间"  prop="startTime">
+                            <el-date-picker
+                                    v-model="form2.startTime"
+                                    type="datetime"
+                                    placeholder="选择日期时间">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                        <el-form-item label="结束时间"  prop="overTime">
+                            <el-date-picker
+                                    v-model="form2.overTime"
+                                    type="datetime"
+                                    placeholder="选择日期时间">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                        <el-form-item label="会议室" >
+                            <el-select v-model="form2.mroomBsm" placeholder="请选择会议室"  @change="onSelectedDrug($event, item)">
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.bsm"
+                                        :label="item.roomname"
+                                        :value="item.bsm">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                        <el-form-item label="备注"  prop="content">
+                            <el-input type="textarea" v-model="form2.content"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                        <el-form-item label="选择参会人员" >
+                            <el-transfer
+                                    filterable
+                                    :filter-method="filterMethod"
+                                    filter-placeholder="请选择参会人员"
+                                    v-model="form2.uBsm"
+                                    :data="usernames">
+                            </el-transfer>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmit('form2')">立即创建</el-button>
+                            <el-button @click="resetForm('form2')">重置</el-button>
+                        </el-form-item>
+                    </el-col>
+                </el-form>
+            </el-row>
+        </div>
+    </el-dialog>
+
+    <!--        添加信息弹出框-->
+    <el-dialog
+            title="添加会议"
+            :visible.sync="dialogVisible1"
+            width="80%"
+            :before-close="handleClose">
+        <div id="userInfo1">
+            <el-row :gutter="20">
+                    <el-form ref="form2" :model="form2" :rules="rules"  label-width="150px">
+                        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                            <el-form-item label="会议名称(主题)"  prop="name">
+                                <el-input v-model="form2.name"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                            <el-form-item label="参会人数"  prop="totals">
+                                <el-input v-model="form2.totals"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                            <el-form-item label="开始时间"  prop="startTime">
+                                <el-date-picker
+                                        v-model="form2.startTime"
+                                        type="datetime"
+                                        placeholder="选择日期时间">
+                                </el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                            <el-form-item label="结束时间"  prop="overTime">
+                                <el-date-picker
+                                        v-model="form2.overTime"
+                                        type="datetime"
+                                        placeholder="选择日期时间">
+                                </el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                            <el-form-item label="会议室" >
+                                <el-select v-model="form2.mroomBsm" placeholder="请选择会议室"  @change="onSelectedDrug($event, item)">
+                                    <el-option
+                                            v-for="item in options"
+                                            :key="item.bsm"
+                                            :label="item.roomname"
+                                            :value="item.bsm">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                            <el-form-item label="备注"  prop="content">
+                                <el-input type="textarea" v-model="form2.content"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                            <el-form-item label="选择参会人员" >
+                                <el-transfer
+                                        filterable
+                                        :filter-method="filterMethod"
+                                        filter-placeholder="请选择参会人员"
+                                        v-model="form2.uBsm"
+                                        :data="usernames">
+                                </el-transfer>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                            <el-form-item>
+                                <el-button type="primary" @click="submitForm('form2')">立即创建</el-button>
+                                <el-button @click="resetForm('form2')">重置</el-button>
+                            </el-form-item>
+                        </el-col>
+                    </el-form>
+            </el-row>
+        </div>
+    </el-dialog>
+    <!--        签到表窗口-->
+    <el-dialog
+            title="签到表"
+            :visible.sync="qdbVisible"
+            width="80%"
+            :before-close="handleClose">
+        <div id="qdbtable" style="text-align: center">
+            <h3>签到表</h3>
+            <div style="border: black 1px solid;min-height: 200px;min-width: 100%;text-align: center">
+                <el-row :gutter="20">
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                        <div style="text-align: center"><h2>{{qdtable.name}}</h2></div>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                        <div style="border-top:1px solid black;text-align: center;line-height: 30px">
+                            <div>{{qdtable.startTime}}--{{qdtable.overTime}} [{{qdtable.mroomBsm}}] 共计{{qdtable.totals}}人参会 </div>
+                        </div>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                        <div style="border-top:1px solid black;text-align: center;line-height: 30px;display: flex;flex-direction:row">
+                            <div style="text-align: center; flex-grow:1;border-right: 1px solid black;"><div style="min-width:50px;text-align: center ">姓名</div></div>
+                            <div style="text-align: center; flex-grow:1;border-right: 1px solid black;"><div style="min-width:50px;text-align: center ">签名</div></div>
+                            <div style="text-align: center; flex-grow:1"><div style="min-width:50px;text-align: center ">备注</div></div>
+                        </div>
+                    </el-col>
+
+                    <el-col  :xs="24" :sm="24" :md="24" :lg="24" :xl="24" v-for="it in qdtableusername">
+                        <div  style="border-top:1px solid black;text-align: center;line-height: 30px;display: flex;flex-direction:row;align-items:stretch">
+                            <div style="text-align: center; flex-grow:1;border-right: 1px solid black;"><div style="min-width:50px;text-align: center ">{{it}}</div></div>
+                            <div style="text-align: center; flex-grow:1;border-right: 1px solid black;"><div style="min-width:50px;text-align: center "></div></div>
+                            <div style="text-align: center; flex-grow:1"><div style="min-width:50px;text-align: center "></div></div>
+                        </div>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                        <div style="border-top:1px solid black;margin-bottom: 50px"></div>
+                    </el-col>
+                </el-row>
+            </div>
+        </div>
+        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" style="margin-top: 40px;margin-bottom: 10px">
+            <el-button type="primary" @click="printDiv()">打印</el-button>
+            <el-button @click="qdbVisible = false">取消</el-button>
+        </el-col>
+    </el-dialog>
+</div>
+</body>
+</html>

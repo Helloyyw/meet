@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crk.hs.dao.CarMapper" >
+  <resultMap id="BaseResultMap" type="com.crk.hs.entity.Car" >
+    <id column="bsm" property="bsm" jdbcType="VARCHAR" />
+    <result column="carno" property="carno" jdbcType="VARCHAR" />
+    <result column="pingpai" property="pingpai" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="capacity" property="capacity" jdbcType="INTEGER" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bsm, pingpai,carno, type, capacity, company, status, content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from m_car
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from m_car
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.crk.hs.entity.Car" >
+    insert into m_car (bsm, pingpai, carno,type,
+      capacity, company, status, 
+       content)
+    values (#{bsm,jdbcType=VARCHAR}, #{pingpai,jdbcType=VARCHAR}, #{carno,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
+      #{capacity,jdbcType=INTEGER}, #{company,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{content,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.crk.hs.entity.Car" >
+    insert into m_car
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bsm != null" >
+        bsm,
+      </if>
+      <if test="pingpai != null" >
+        pingpai,
+      </if>
+       <if test="carno != null" >
+         carno,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="capacity != null" >
+        capacity,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bsm != null" >
+        #{bsm,jdbcType=VARCHAR},
+      </if>
+      <if test="pingpai != null" >
+        #{pingpai,jdbcType=VARCHAR},
+      </if>
+      <if test="carno != null" >
+        #{carno,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="capacity != null" >
+        #{capacity,jdbcType=INTEGER},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="uBsm != null" >
+        #{uBsm,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crk.hs.entity.Car" >
+    update m_car
+    <set >
+      <if test="pingpai != null" >
+        pingpai = #{pingpai,jdbcType=VARCHAR},
+      </if>
+
+      <if test="carno != null" >
+        carno = #{carno,jdbcType=VARCHAR},
+      </if>
+      <if test="capacity != null" >
+        capacity = #{capacity,jdbcType=INTEGER},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crk.hs.entity.Car" >
+    update m_car
+    set pingpai = #{pingpai,jdbcType=VARCHAR},
+       carno = #{carno,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      capacity = #{capacity,jdbcType=INTEGER},
+      company = #{company,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR}
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </update>
+  <select id="getCarList" resultMap="BaseResultMap" parameterType="com.github.pagehelper.Page">
+    select
+    <include refid="Base_Column_List"/>
+    from m_car
+  </select>
+  <select id="getCarBystatusAndpingpaiCp" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from m_car where 1=1
+
+    <if test="pingpai != null and pingpai != ''" >
+      and  pingpai = #{pingpai,jdbcType=VARCHAR}
+    </if>
+    <if test="carno != null and carno != ''" >
+      and  carno = #{carno,jdbcType=VARCHAR}
+    </if>
+    <if test="status != 0 " >
+      and  status = #{status,jdbcType=INTEGER}
+    </if>
+
+  </select>
+</mapper>

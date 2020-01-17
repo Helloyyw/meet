@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" name="viewport">
+    <title>礼品管理模块</title>
+    <script src="../static/js/jquery-2.2.4.js"></script>
+    <script src="../static/Vue/vue.js"></script>
+    <script src="../static/element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="../static/element-ui/lib/theme-chalk/index.css">
+    <script src="../static/js/Jquery.Common.js"></script>
+    <script type="text/javascript">
+        var vm;
+        window.onload = function () {
+            vm = new Vue({
+                el: "#app",
+                mounted: function () {
+                    this.initGiftList(this.pageNum,this.pageSize)
+                },
+                data: {
+                    pageNum: 1,
+                    pageSize: 10,
+                    total:0,
+                    form: {
+
+                    },
+                    form2: {
+                        name:'',
+                        type:'',
+                        totals:'',
+                        price:'',
+                        address:'',
+                        bsm:'',
+                        content:'',
+                        kcsl:'',
+                    },
+                    form1: {//查询使用的表单
+                        name:'',
+                        type:''
+                    },
+                    tableData: [],
+                    dialogVisible: false,
+                    dialogVisible1: false,
+                    rules: {
+                        name: [
+                            { required: true, message: '请输入名称', trigger: 'blur' },
+                            { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+                        ],
+                        type: [
+                            { required: true, message: '请输入礼品类型', trigger: 'blur' },
+                        ],
+                        price: [
+                            { required: true, message: '请输入礼品单价', trigger: 'blur' },
+                        ],
+                        address: [
+                            { required: true, message: '请选输入出厂地址', trigger: 'blur' },
+                        ],
+                        totals: [
+                            { required: true, message: '请输入总量', trigger: 'blur' },
+
+                        ],
+                        kcsl: [
+                            { required: true, message: '请输入库存数量', trigger: 'blur' },
+                        ],
+                    }
+
+                },
+                methods: {
+                    //登录js
+                    initGiftList: function (pageNum, pageSize) {
+                        let then = this;
+                        let list = {
+                            'pageNum': pageNum,
+                            'pageSize': pageSize
+                        }
+                        $.ajax({
+                            //请求方式
+                            type: "POST",
+                            //请求的媒体类型
+                            contentType: "application/json;charset=UTF-8",
+                            dataType: "json",
+                            async: false,
+                            //请求地址 http://localhost:8083/meet+ 后台请求地址
+                            url: Common.GetAppPath() + "/gift/getGiftList",
+                            //数据，json字符串
+                            data: Common.Encode(JSON.stringify(list)),
+                            //请求成功
+                            success: function (result) {
+                                var giftList = result.data;
+                                if (!(giftList instanceof Object)) {
+                                    giftList = JSON.parse(giftList);
+                                }
+                                //把返回来的用户列表加载到表格
+                                console.log(giftList);
+                                let listUser = giftList.list;
+                                then.tableData = listUser;
+                                then.total = giftList.total;
+                                console.log(listUser);
+                                console.log(listUser[0].name);
+                            },
+                            //请求失败，包含具体的错误信息
+                            error: function (e) {
+                                alert("查询列表请求失败");
+                                console.log(e.status);
+                                console.log(e.responseText);
+                            }
+                        });
+                    },
+                    //删除提示
+                    open: function (index, rows) {
+                        this.$alert('确定要删除吗?', '提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                rows.splice(index, 1);
+                                this.$message({
+                                    type: 'info',
+                                    message: `action: 删除成功`
+                                });
+                            }
+                        });
+                    },
+                    //分页插件
+                    handleSizeChange: function (val) {//分页改变每页显示多少条
+                        this.pageSize = val;
+                        this.initGiftList(this.pageNum, this.pageSize);
+                        console.log(`每页 ${val} 条`);
+                    },
+                    //跳转到指定页面
+                    handleCurrentChange: function (val) {
+                        this.pageNum = val;
+                        this.initGiftList(this.pageNum, this.pageSize);
+                        console.log(`当前页: ${val}`);
+
+                    },
+                    //关闭弹框
+                    handleClose: function (done) {
+                        this.$confirm('确认关闭？')
+                            .then(_ => {
+                                done();
+                            })
+                            .catch(_ => {
+                            });
+                    },
+                    //查看详情页面给弹框表单赋值
+                    editRow: function (index, rows) {
+                        this.dialogVisible = true;
+                        this.form = rows[index];
+                        console.log(this.form);
+                    },
+                    //修改礼品信息
+                    onSubmit() {
+                        console.log(this.form);
+                        this.dialogVisible = false;
+                        $.ajax({
+                            //请求方式
+                            type: "POST",
+                            //请求的媒体类型
+                            contentType: "application/json;charset=UTF-8",
+                            dataType: "json",
+                            async: false,
+                            //请求地址 http://localhost:8083/meet+ 后台请求地址
+                            url: Common.GetAppPath() + "/gift/updategift",
+                            //数据，json字符串
+                            data: Common.Encode(JSON.stringify(this.form)),
+                            //请求成功
+                            success: function (result) {
+                                let code = result.code;
+                                if (code == 0 || code == "0") {
+                                    alert("修改成功");
+                                } else {
+                                    alert("修改失败,请联系管理员");
+                                }
+                            },
+                            //请求失败，包含具体的错误信息
+                            error: function (e) {
+                                alert("updategift接口请求失败");
+                                console.log(e.status);
+                                console.log(e.responseText);
+                            }
+                        });
+                    },
+                    //查询方法
+                    search: function () {
+                        let then = this;
+                        let list = {
+                            'name': then.form1.name,
+                            'type': then.form1.type
+                        }
+                        alert(then.form1.type);
+                        $.ajax({
+                            //请求方式
+                            type: "POST",
+                            //请求的媒体类型
+                            contentType: "application/json;charset=UTF-8",
+                            dataType: "json",
+                            async: false,
+                            //请求地址 http://localhost:8083/meet+ 后台请求地址
+                            url: Common.GetAppPath() + "/gift/searchgift",
+                            //数据，json字符串
+                            data: Common.Encode(JSON.stringify(list)),
+                            //请求成功
+                            success: function (result) {
+                                var giftList = result.data;
+                                if (!(giftList instanceof Object)) {
+                                    giftList = JSON.parse(giftList);
+                                }
+                                //把返回来的用户列表加载到表格
+                                console.log(giftList);
+                                let listUser = giftList.list;
+                                then.tableData = listUser;
+                                then.total = giftList.total;
+                                console.log(listUser);
+                                console.log(listUser[0].name);
+                            },
+                            //请求失败，包含具体的错误信息
+                            error: function (e) {
+                                alert("查询请求失败");
+                                console.log(e.status);
+                                console.log(e.responseText);
+                            }
+                        });
+                    },
+                    //重置查询清空 输入框
+                    reset: function () {
+                        this.form1.name = '';
+                        this.form1.type = '';
+                        this.pageNum = 1;
+                        this.pageSize = 10;
+                        this.initGiftList(this.pageNum, this.pageSize)
+                    },
+                    //打开添加表单
+                    adduser: function () {
+                        console.log(this.form);
+                        this.dialogVisible1 = true;
+                    },
+                    //提交添加的礼品实体
+                    submitForm: function (formName) {
+                        let then = this;
+                        this.$refs[formName].validate((valid) => {
+                            if (valid) {
+                                alert('submit!');
+                                //验证统过开始请求后台接口
+                                $.ajax({
+                                    //请求方式
+                                    type: "POST",
+                                    //请求的媒体类型
+                                    contentType: "application/json;charset=UTF-8",
+                                    dataType: "json",
+                                    async: false,
+                                    //请求地址 http://localhost:8083/meet+ 后台请求地址
+                                    url: Common.GetAppPath() + "/gift/addgift",
+                                    //数据，json字符串
+                                    data: Common.Encode(JSON.stringify(this.form2)),
+                                    //请求成功
+                                    success: function (result) {
+                                        let code = result.code;
+                                        if (code == 0 || code == "0") {
+                                            alert("添加成功");
+                                            then.dialogVisible1 = false;
+                                            then.reset();
+                                        } else {
+                                            alert("添加失败,请联系管理员");
+                                        }
+
+                                    },
+                                    //请求失败，包含具体的错误信息
+                                    error: function (e) {
+                                        alert("addgift请求失败");
+                                        console.log(e.status);
+                                        console.log(e.responseText);
+                                    }
+                                });
+                            } else {
+                                alert('请按照要求填写完整的信息');
+                                return false;
+                            }
+                        });
+                    },
+                    resetForm: function (formName) {
+                        this.$refs[formName].resetFields();
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div id="app">
+    <div id="search">
+        <el-card>
+            <el-row :gutter="10">
+                <el-form ref="form1" :model="form1" label-width="150px">
+                    <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
+                        <el-form-item label="礼品名称">
+                            <el-input v-model="form1.name"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
+                        <el-form-item label="礼品类型">
+                            <el-input v-model="form1.type"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
+                        <el-button type="primary" @click="search()">查询</el-button>
+                        <el-button  @click="reset()">重置</el-button>
+                        <el-button  @click="adduser()">添加礼品</el-button>
+                    </el-col>
+                </el-form>
+            </el-row>
+        </el-card>
+    </div>
+    <div id="userTable" style="padding: 5px">
+        <el-table
+                :data="tableData"
+                style="width: 100%"
+                highlight-current-row
+                min-height="500">
+
+            <el-table-column
+                    fixed
+                    type="index"
+                    prop="index"
+                    label="索引"
+                    width="50">
+            </el-table-column>
+            <el-table-column
+                    fixed
+                    prop="name"
+                    label="礼品名称"
+                    width="150">
+            </el-table-column>
+            <el-table-column
+                    prop="type"
+                    label="类型"
+                    width="200">
+            </el-table-column>
+            <el-table-column
+                    prop="price"
+                    label="单价"
+                    width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="totals"
+                    label="总数量"
+                    width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="kcsl"
+                    label="库存数量"
+                    width="200">
+            </el-table-column>
+            <el-table-column
+                    prop="address"
+                    label="出厂地址"
+                    width="200">
+            </el-table-column>
+            <el-table-column
+                    prop="content"
+                    label="备注说明"
+                    width="200">
+            </el-table-column>
+            <el-table-column
+                    fixed="right"
+                    label="操作"
+                    width="120">
+                <template slot-scope="scope">
+                    <el-button
+                            @click.native.prevent="open(scope.$index, tableData)"
+                            type="text"
+                            size="small"
+                            color="red">
+                        删除
+                    </el-button>
+                    <el-button
+                            @click.native.prevent="editRow(scope.$index, tableData)"
+                            type="text"
+                            size="small">
+                        详情编辑
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+    <!--        分页-->
+    <div class="block">
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="pageNum"
+                :page-sizes="[10, 20, 30, 40]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+        </el-pagination>
+    </div>
+    <!-- 修改信息弹出框  or  详情 显示框-->
+    <el-dialog
+            title="详情信息展示"
+            :visible.sync="dialogVisible"
+            width="60%"
+            :before-close="handleClose">
+        <div id="userInfo">
+            <el-form ref="form" :model="form" label-width="150px">
+                <el-form-item label="礼品名称">
+                    <el-input v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item label="礼品类型">
+                    <el-input v-model="form.type"></el-input>
+                </el-form-item>
+                <el-form-item label="礼品总数量">
+                    <el-input v-model="form.totals"></el-input>
+                </el-form-item>
+                <el-form-item label="当前库存">
+                    <el-input v-model="form.kcsl"></el-input>
+                </el-form-item>
+
+                <el-form-item label="单价">
+                    <el-input v-model="form.price"></el-input>
+                </el-form-item>
+                <el-form-item label="出厂地址">
+                    <el-input v-model="form.address" ></el-input>
+                </el-form-item>
+                <el-form-item label="备注">
+                    <el-input type="textarea" v-model="form.content"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="onSubmit">立即创建</el-button>
+                    <el-button @click="dialogVisible = false">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </el-dialog>
+    <!--        添加信息弹出框-->
+    <el-dialog
+            title="添加礼品信息"
+            :visible.sync="dialogVisible1"
+            width="60%"
+            :before-close="handleClose">
+        <div id="userInfo1">
+            <el-form ref="form2" :model="form2" :rules="rules"  label-width="150px">
+                <el-form-item label="礼品名称"  prop="name">
+                    <el-input v-model="form2.name"></el-input>
+                </el-form-item>
+                <el-form-item label="礼品类型" prop="type">
+                    <el-input v-model="form2.type"></el-input>
+                </el-form-item>
+                <el-form-item label="礼品总量" prop="totals">
+                    <el-input v-model="form2.totals"></el-input>
+                </el-form-item>
+                <el-form-item label="单价" prop="price">
+                    <el-input v-model="form2.price"></el-input>
+                </el-form-item>
+                <el-form-item label="当前库存" prop="kcsl">
+                    <el-input v-model="form2.kcsl"></el-input>
+                </el-form-item>
+
+                <el-form-item label="出厂地址" prop="address">
+                    <el-input v-model="form2.address"></el-input>
+                </el-form-item>
+                <el-form-item label="备注" >
+                    <el-input type="textarea" v-model="form2.content"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('form2')">立即创建</el-button>
+                    <el-button @click="resetForm('form2')">重置</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </el-dialog>
+</div>
+</body>
+</html>

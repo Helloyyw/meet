@@ -10,6 +10,8 @@ public class CodeMsg {
     public static CodeMsg INSERT_ERROR = new CodeMsg(100001,"插入失败");
     public static CodeMsg SELECT_ERROR = new CodeMsg(100002,"查询失败");
     public static CodeMsg UPDATE_ERROR = new CodeMsg(100003,"更新失败");
+    public static CodeMsg NO_ACL_Error = new CodeMsg(100004,"无权限异常");
+    public static int severERR = 100;
 
     public CodeMsg(int code, String msg) {
         this.code = code;

@@ -4,32 +4,7 @@
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" name="viewport">
   <title>Dashboard &mdash; Stisla</title>
-
-<!--  <link rel="stylesheet" href="../static/dist/modules/bootstrap/css/bootstrap.min.css">-->
-<!--  <link rel="stylesheet" href="../static/dist/modules/ionicons/css/ionicons.min.css">-->
-<!--  <link rel="stylesheet" href="../static/dist/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">-->
-<!--  <link rel="stylesheet" href="../static/dist/modules/summernote/summernote-lite.css">-->
-<!--  <link rel="stylesheet" href="../static/dist/modules/flag-icon-css/css/flag-icon.min.css">-->
-<!--  <link rel="stylesheet" href="../static/dist/css/demo.css">-->
-<!--  <link rel="stylesheet" href="../static/dist/css/style.css">-->
-
-
   <script src="../static/dist/modules/jquery.min.js"></script>
-<!--  <script src="../static/dist/modules/popper.js"></script>-->
-<!--  <script src="../static/dist/modules/tooltip.js"></script>-->
-<!--  <script src="../static/dist/modules/bootstrap/js/bootstrap.min.js"></script>-->
-<!--  <script src="../static/dist/modules/nicescroll/jquery.nicescroll.min.js"></script>-->
-<!--  <script src="../static/dist/modules/scroll-up-bar/dist/scroll-up-bar.min.js"></script>-->
-<!--  <script src="../static/dist/js/sa-functions.js"></script>-->
-
-<!--  <script src="../static/dist/modules/chart.min.js"></script>-->
-<!--  <script src="../static/dist/modules/summernote/summernote-lite.js"></script>-->
-
-
-<!--&lt;!&ndash;  <script src="../static/dist/js/scripts.js"></script>&ndash;&gt;-->
-<!--  <script src="../static/dist/js/custom.js"></script>-->
-<!--  <script src="../static/dist/js/demo.js"></script>-->
-
   <!--  vue-->
   <script src="../static/js/jquery-2.2.4.js"></script>
   <script src="../static/Vue/vue.js"></script>
@@ -75,8 +50,9 @@
             width: 100%;
         }
         .touxiang_img{
-            width: 50px;
-            height: 50px;
+            margin-top: 22px;
+            width: 60px;
+            height: 60px;
             border-radius: 100%;
             overflow: hidden;
         }
@@ -85,6 +61,7 @@
         }
 
         .touxiang_text{
+         margin-left: 15px;
             width: 50%;
             height: 100%;
             overflow: hidden;
@@ -106,7 +83,7 @@
       vm = new Vue({
         el: "#app",
         mounted: function () {
-        //  this.bingUserinfo();
+          this.bingUserinfo();
         },
         data: {
             editableTabsValue: '1',
@@ -116,16 +93,16 @@
                 content: 'Tab 1 content'
             }],
             tabIndex: 1,
+            username:'',
+            level:'',
+            age:''
         },
         methods: {
           //绑定用户信息
           bingUserinfo: function () {
             var useinfo = Common.GetCookie("userinfo");
-            console.log(JSON.parse(useinfo));
             useinfo =  JSON.parse(useinfo);
-            if(!(useinfo.name == 'admin')){
-              this.username = useinfo.name;
-            }
+            this.username = useinfo.name;
             this.age = useinfo.age;
             this.pwd = useinfo.pwd;
             this.level = useinfo.level;
@@ -171,12 +148,10 @@
                 this.editableTabsValue = activeName;
                 this.editableTabs = tabs.filter(tab => tab.name !== targetName);
             }//删除tab页面
-
         }
       });
     });
   </script>
-
 </head>
 
 <body>
@@ -191,21 +166,18 @@
                     <div class="touxiang_img" >
                       <img class="round_icon" src="../static/dist/img/avatar/avatar-3.jpeg">
                     </div>
-
                   <div class="touxiang_text">
-                      <p>user</p>
-                      <p>管理员</p>
+                      <p>用户名： {{username}}</p>
+                      <p>职位： {{level}}</p>
+                      <p>  <el-link type="primary" href="login.html" >退出系统</el-link></p>
                   </div>
                 </div>
-
                 <!--  树形菜单组件-->
                 <div class="treeMenu" >
                   <el-row class="tac" style="width: 100%;">
                     <el-col :span="12" style="width: 100%">
                       <div class="tree_title" style="background-color: #8cc5ff">
-                        <el-card>
                           <a href="index.html">会议综合管理系统</a>
-                        </el-card>
                       </div>
                       <el-menu
                               default-active="2"
@@ -214,39 +186,64 @@
                               @close="handleClose">
                         <el-submenu index="1">
                           <template slot="title">
-                            <i class="el-icon-location"></i>
+                            <i class="el-icon-s-home"></i>
                             <span>接待活动管理</span>
                           </template>
                           <el-menu-item-group>
-                            <template slot="title">分组一</template>
-                            <el-menu-item index="1-1">选项1</el-menu-item>
-                            <el-menu-item index="1-2">选项2</el-menu-item>
+                            <template slot="title">签到模块</template>
+                              <el-menu-item index="1-2" @click="addTab(editableTabsValue,'addmeet.html','会议基本信息')">会议基本信息</el-menu-item>
                           </el-menu-item-group>
-                          <el-menu-item-group title="分组2">
-                            <el-menu-item index="1-3">选项3</el-menu-item>
-                          </el-menu-item-group>
-                          <el-submenu index="1-4">
-                            <template slot="title">选项4</template>
-                            <el-menu-item index="1-4-1">选项1</el-menu-item>
-                          </el-submenu>
                         </el-submenu>
                           <el-submenu index="2">
                               <template slot="title">
-                                  <i class="el-icon-location"></i>
+                                  <i class="el-icon-user-solid"></i>
                                   <span>用户管理</span>
                               </template>
                               <el-menu-item-group>
                                   <template slot="title">工作人员模块</template>
                                   <el-menu-item index="2-1"  @click="addTab(editableTabsValue,'userhtml.html','人员管理')">人员管理</el-menu-item>
-                                  <el-menu-item index="2-2"  @click="addTab(editableTabsValue,'userhtml.html','选项2')">选项2</el-menu-item>
                               </el-menu-item-group>
-                              <el-menu-item-group title="参会人员模块">
-                                  <el-menu-item index="2-3">参会人员管理</el-menu-item>
+                              <el-menu-item-group >
+                                  <template slot="title">参会人员模块</template>
+                                  <el-menu-item index="2-2"   @click="addTab(editableTabsValue,'canhuiuser.html','参会人员管理')">参会人员管理</el-menu-item>
                               </el-menu-item-group>
-                              <el-submenu index="2-4">
-                                  <template slot="title">选项4</template>
-                                  <el-menu-item index="2-4-1">选项1</el-menu-item>
-                              </el-submenu>
+                          </el-submenu>
+                          <el-submenu index="3">
+                              <template slot="title">
+                                  <i class="el-icon-present"></i>
+                                  <span>礼品管理</span>
+                              </template>
+                              <el-menu-item-group>
+                                  <el-menu-item index="2-1"  @click="addTab(editableTabsValue,'gift.html','人员管理')">礼品管理列表</el-menu-item>
+                              </el-menu-item-group>
+                          </el-submenu>
+                          <el-submenu index="4">
+                              <template slot="title">
+                                  <i class="el-icon-position"></i>
+                                  <span>接送机管理</span>
+                              </template>
+                              <el-menu-item-group>
+                                  <el-menu-item index="2-1"  @click="addTab(editableTabsValue,'jsjList.html','接送机列表')">接送机列表</el-menu-item>
+                              </el-menu-item-group>
+                          </el-submenu>
+                          <el-submenu index="5">
+                              <template slot="title">
+                                  <i class="el-icon-truck"></i>
+                                  <span>车辆调度管理</span>
+                              </template>
+                              <el-menu-item-group>
+                                  <el-menu-item index="2-1"  @click="addTab(editableTabsValue,'car.html','车辆调度功能')">车辆调度功能</el-menu-item>
+                              </el-menu-item-group>
+                          </el-submenu>
+                          <el-submenu index="6">
+                              <template slot="title">
+                                  <i class="el-icon-s-home"></i>
+                                  <span>房间管理</span>
+                              </template>
+                              <el-menu-item-group>
+                                  <el-menu-item index="2-1"  @click="addTab(editableTabsValue,'zhushuhtml.html','住宿分配模块')">住宿管理</el-menu-item>
+                                  <el-menu-item index="2-2"  @click="addTab(editableTabsValue,'hyshtml.html','会议室管理')">会议室管理</el-menu-item>
+                              </el-menu-item-group>
                           </el-submenu>
                       </el-menu>
                     </el-col>
@@ -260,9 +257,9 @@
         <div style="height: 100%;width: 100%">
            <el-row :gutter="10">
               <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-                <div class="grid-content bg-purple">
-                  asda
-                </div>
+<!--                <div class="grid-content bg-purple" style="text-align: center;padding: 5px">-->
+<!--                    <el-button round type="info" icon="el-icon-circle-plus" @click="addTab(editableTabsValue,'addmeet.html','添加会议')">添加会议</el-button>-->
+<!--                </div>-->
               </el-col>
               <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                 <div class="grid-content bg-purple" style="min-height: 590px;">
@@ -308,7 +305,5 @@
 <!--&lt;!&ndash;    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>&ndash;&gt;-->
 <!--  </span>-->
 <!--    </el-dialog>-->
-
-
 </body>
 </html>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crk.hs.dao.RoomMapper" >
+  <resultMap id="BaseResultMap" type="com.crk.hs.entity.Room" >
+    <id column="bsm" property="bsm" jdbcType="VARCHAR" />
+    <result column="roomno" property="roomno" jdbcType="VARCHAR" />
+    <result column="place" property="place" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="capacity" property="capacity" jdbcType="INTEGER" />
+    <result column="roomname" property="roomname" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bsm, roomno, place, status, type, capacity, roomname, phone, content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from m_room
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from m_room
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.crk.hs.entity.Room" >
+    insert into m_room (bsm, roomno, place, 
+      status, type, capacity, 
+      roomname, phone, content
+      )
+    values (#{bsm,jdbcType=VARCHAR}, #{roomno,jdbcType=VARCHAR}, #{place,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{capacity,jdbcType=INTEGER}, 
+      #{roomname,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.crk.hs.entity.Room" >
+    insert into m_room
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bsm != null" >
+        bsm,
+      </if>
+      <if test="roomno != null" >
+        roomno,
+      </if>
+      <if test="place != null" >
+        place,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="capacity != null" >
+        capacity,
+      </if>
+      <if test="roomname != null" >
+        roomname,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bsm != null" >
+        #{bsm,jdbcType=VARCHAR},
+      </if>
+      <if test="roomno != null" >
+        #{roomno,jdbcType=VARCHAR},
+      </if>
+      <if test="place != null" >
+        #{place,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="capacity != null" >
+        #{capacity,jdbcType=INTEGER},
+      </if>
+      <if test="roomname != null" >
+        #{roomname,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crk.hs.entity.Room" >
+    update m_room
+    <set >
+      <if test="roomno != null" >
+        roomno = #{roomno,jdbcType=VARCHAR},
+      </if>
+      <if test="place != null" >
+        place = #{place,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="capacity != null" >
+        capacity = #{capacity,jdbcType=INTEGER},
+      </if>
+      <if test="roomname != null" >
+        roomname = #{roomname,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crk.hs.entity.Room" >
+    update m_room
+    set roomno = #{roomno,jdbcType=VARCHAR},
+      place = #{place,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      capacity = #{capacity,jdbcType=INTEGER},
+      roomname = #{roomname,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR}
+    where bsm = #{bsm,jdbcType=VARCHAR}
+  </update>
+  <select id="getRoomList" resultMap="BaseResultMap" parameterType="com.github.pagehelper.Page">
+    select
+    <include refid="Base_Column_List"/>
+    from m_room
+  </select>
+  <select id="getRoomBystatusAndpingpaiCp" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from m_room where 1=1
+
+    <if test="roomno != null and roomno != ''" >
+      and  roomno = #{roomno,jdbcType=VARCHAR}
+    </if>
+    <if test="roomname != null and roomname != ''" >
+      and  roomname = #{roomname,jdbcType=VARCHAR}
+    </if>
+    <if test="capacity != 0 " >
+      and  capacity = #{capacity,jdbcType=INTEGER}
+    </if>
+
+  </select>
+</mapper>

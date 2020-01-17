@@ -174,4 +174,33 @@
   <select id="getByUserNameAndPwd" parameterType="java.lang.String" resultMap="BaseResultMap">
        select * from m_user where  name = #{username,jdbcType=VARCHAR} and pwd = #{password,jdbcType=VARCHAR}
   </select>
+  <select id="getUserList" resultMap="BaseResultMap" parameterType="com.github.pagehelper.Page">
+    select
+    <include refid="Base_Column_List"/>
+    from m_user
+  </select>
+  <select id="getUserBynameAndid" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List"/>
+    from m_user where 1=1
+
+    <if test="name != null and name != ''" >
+      and  name = #{name,jdbcType=VARCHAR}
+    </if>
+
+    <if test="cardid != null  and cardid != ''" >
+      and  cardid = #{cardid,jdbcType=VARCHAR}
+    </if>
+
+  </select>
+
+  <select id="getUserNameByBsm" parameterType="java.util.List" resultType="java.lang.String">
+    select name
+    FROM
+    m_user
+    WHERE bsm in
+    <foreach collection="uBsm" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </select>
 </mapper>

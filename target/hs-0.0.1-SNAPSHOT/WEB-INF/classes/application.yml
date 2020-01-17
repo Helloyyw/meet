@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    name: localhost_3306
+    name: ex
     url: jdbc:mysql://127.0.0.1:3306/meet?serverTimezone=UTC&characterEncoding=utf-8
     username: root
     password: 1
@@ -35,5 +35,10 @@ spring:
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml #这里是mapper的配置文件
   type-aliases-package: com.crk.hs.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
