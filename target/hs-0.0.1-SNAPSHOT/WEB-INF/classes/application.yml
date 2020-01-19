@@ -4,7 +4,7 @@ spring:
   mail:
     host: smtp.qq.com
     username: 1475556814@qq.com
-    password: fojg #开启POP3之后设置的客户端授权码
+    password: sflyvbcfialxibeh #开启POP3之后设置的客户端授权码
     default-encoding: UTF-8
   datasource:
     name: ex
