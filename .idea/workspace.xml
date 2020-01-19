@@ -8,10 +8,7 @@
   <component name="ChangeListManager">
     <list default="true" id="dba01b66-10e5-4f1f-a04f-bd28c27efeb8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/hs-0.0.1-SNAPSHOT/WEB-INF/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/hs-0.0.1-SNAPSHOT/WEB-INF/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/hs-0.0.1-SNAPSHOT/WEB-INF/classes/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/hs-0.0.1-SNAPSHOT/WEB-INF/classes/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/crk/hs/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/crk/hs/controller/LoginController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,7 +221,7 @@
               <path>
                 <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
                 <item name="Tomcat Server" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-                <item name="Running" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+                <item name="Finished" type="7427dc5b:ServiceModel$ServiceGroupNode" />
               </path>
             </expand>
             <select />
@@ -263,7 +260,7 @@
       <workItem from="1579174072243" duration="6475000" />
       <workItem from="1579258185531" duration="3029000" />
       <workItem from="1579261551950" duration="37793000" />
-      <workItem from="1579391799813" duration="3001000" />
+      <workItem from="1579391799813" duration="3168000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <created>1575961368573</created>
@@ -321,7 +318,14 @@
       <option name="project" value="LOCAL" />
       <updated>1579394404006</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="完成发送邮件的功能">
+      <created>1579395139185</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1579395139185</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -372,10 +376,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="413" y="111" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1366.728@0.0.1366.728" timestamp="1579265495340" />
-    <state x="121" y="0" key="CommitChangelistDialog2" timestamp="1579394383388">
+    <state x="121" y="0" key="CommitChangelistDialog2" timestamp="1579395194785">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="121" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1579394383388" />
+    <state x="121" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1579395194785" />
     <state x="217" y="26" key="CommitChangelistDialog2/0.0.1440.870@0.0.1440.870" timestamp="1575961474609" />
     <state x="474" y="158" key="FileChooserDialogImpl" timestamp="1579261418227">
       <screen x="0" y="0" width="1366" height="728" />
@@ -492,10 +496,10 @@
     </state>
     <state x="190" y="7" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1579261425917" />
     <state x="200" y="8" key="SettingsEditor/0.0.1440.870@0.0.1440.870" timestamp="1575961339924" />
-    <state x="275" y="97" key="Vcs.Push.Dialog.v2" timestamp="1579394408283">
+    <state x="275" y="97" key="Vcs.Push.Dialog.v2" timestamp="1579395142644">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="275" y="97" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1579394408283" />
+    <state x="275" y="97" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1579395142644" />
     <state x="165" y="215" key="com.intellij.ide.util.TipDialog" timestamp="1579392517255">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -568,6 +572,16 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/crk/hs/mail/MailServiceImpl.java</url>
           <line>43</line>
           <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/crk/hs/controller/LoginController.java</url>
+          <line>81</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/crk/hs/controller/LoginController.java</url>
+          <line>85</line>
+          <option name="timeStamp" value="26" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

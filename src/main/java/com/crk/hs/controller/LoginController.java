@@ -98,11 +98,14 @@ public class LoginController {
             } catch (MessagingException e) {
                 System.out.println("邮件发送失败了");
                 e.printStackTrace();
+                return  ResultVo.error(CodeMsg.SELECT_ERROR);
             } catch (Exception e) {
                 e.printStackTrace();
+                return  ResultVo.error(CodeMsg.SELECT_ERROR);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return  ResultVo.error(CodeMsg.SELECT_ERROR);
         }
         if(userInfo == null){
             return  ResultVo.error(CodeMsg.SELECT_ERROR);
