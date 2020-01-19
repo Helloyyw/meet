@@ -30,4 +30,6 @@ public interface UserMapper {
     List<User> getUserBynameAndid(@Param("name")String name,@Param("cardid") String cardid);
 
     List<String> getUserNameByBsm(@Param("uBsm")List<String> uBsm);
+
+    User getUserByemail(String email);
 }

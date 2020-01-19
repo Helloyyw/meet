@@ -145,4 +145,16 @@ public class UserServiceImpl  {
         }
         return isAdd;
     }
+
+    public User getByEmail(String email) {
+        User userinfo = null;
+        try {
+            userinfo = userMapper.getUserByemail(email);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return userinfo;
+
+    }
 }

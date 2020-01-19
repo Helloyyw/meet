@@ -27,6 +27,8 @@
         data: {
           username: '用户名',
           password: '密码',
+          dialogVisible: false,
+          email: ''
         },
         methods: {
           //登录js
@@ -65,8 +67,45 @@
                   console.log(e.responseText);
                 }
               });
-          }
+          },
+          //点击忘记密码
+          forgot:function () {
 
+            var then  = this;
+            var list = {
+              'email': then.email
+            }
+            if(then.email != '' && then.email != null){
+              //请求后台返回用户信息 发邮件给用户告知密码
+              $.ajax({
+                //请求方式
+                type : "POST",
+                //请求的媒体类型
+                contentType: "application/json;charset=UTF-8",
+                dataType:"json",
+                async:false,
+                //请求地址 http://localhost:8083/meet+ 后台请求地址
+                url:  Common.GetAppPath()+"/index/forgot",
+                //数据，json字符串
+                data: Common.Encode(JSON.stringify(list)),
+                //请求成功
+                success : function(result) {
+                  if(result.code == 0 || result.code == '0'){
+                        alert("邮件发送成功");
+                  }else {
+                    alert(result.msg);
+                  }
+                },
+                //请求失败，包含具体的错误信息
+                error : function(e){
+                  alert("登录请求失败");
+                  console.log(e.status);
+                  console.log(e.responseText);
+                }
+              });
+            }
+
+          },
         }
       });
     }
@@ -85,7 +124,6 @@
 
             <div class="card card-primary">
               <div class="card-header"><h4>登录页</h4></div>
-
               <div class="card-body">
                 <form method="POST" action="#" class="needs-validation" novalidate="">
                   <div class="form-group">
@@ -99,7 +137,7 @@
                   <div class="form-group">
                     <label for="password" class="d-block">密 码
                       <div class="float-right">
-                        <a href="forgot.html">
+                        <a href="#" @click="dialogVisible = true">
                           忘记密码?
                         </a>
                       </div>
@@ -116,7 +154,6 @@
                       <label class="custom-control-label" for="remember-me">记住我</label>
                     </div>
                   </div>
-
                   <div class="form-group">
                     <button type="button" class="btn btn-primary btn-block" tabindex="4" @click="login">
                       登录
@@ -136,6 +173,26 @@
         </div>
       </div>
     </section>
+    <el-dialog
+                  title="用户验证"
+                  :visible.sync="dialogVisible"
+                  width="50%"
+                  :before-close="handleClose">
+           <div>
+             <el-row :gutter="10">
+               <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+                 <div class="grid-content bg-purple">
+                  <span>请输入你的邮箱:</span>
+                   <input type="text" class="form-control" v-model="email" name="email" tabindex="1" required autofocus>
+                 </div>
+               </el-col>
+             </el-row>
+           </div>
+            <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="forgot">确 定</el-button>
+        </span>
+          </el-dialog>
   </div>
 
   <script src="../static/dist/modules/jquery.min.js"></script>

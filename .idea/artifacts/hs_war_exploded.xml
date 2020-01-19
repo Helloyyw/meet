@@ -73,6 +73,10 @@
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.25" />
           <element id="library" level="project" name="Maven: ch.qos.logback:logback-classic:1.2.3" />
           <element id="library" level="project" name="Maven: ch.qos.logback:logback-core:1.2.3" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-mail:2.2.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-context-support:5.2.2.RELEASE" />
+          <element id="library" level="project" name="Maven: com.sun.mail:jakarta.mail:1.6.4" />
+          <element id="library" level="project" name="Maven: com.sun.activation:jakarta.activation:1.2.1" />
         </element>
       </element>
       <element id="directory" name="META-INF">

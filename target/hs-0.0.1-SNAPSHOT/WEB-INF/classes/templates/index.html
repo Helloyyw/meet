@@ -4,32 +4,7 @@
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" name="viewport">
   <title>Dashboard &mdash; Stisla</title>
-
-<!--  <link rel="stylesheet" href="../static/dist/modules/bootstrap/css/bootstrap.min.css">-->
-<!--  <link rel="stylesheet" href="../static/dist/modules/ionicons/css/ionicons.min.css">-->
-<!--  <link rel="stylesheet" href="../static/dist/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">-->
-<!--  <link rel="stylesheet" href="../static/dist/modules/summernote/summernote-lite.css">-->
-<!--  <link rel="stylesheet" href="../static/dist/modules/flag-icon-css/css/flag-icon.min.css">-->
-<!--  <link rel="stylesheet" href="../static/dist/css/demo.css">-->
-<!--  <link rel="stylesheet" href="../static/dist/css/style.css">-->
-
-
   <script src="../static/dist/modules/jquery.min.js"></script>
-<!--  <script src="../static/dist/modules/popper.js"></script>-->
-<!--  <script src="../static/dist/modules/tooltip.js"></script>-->
-<!--  <script src="../static/dist/modules/bootstrap/js/bootstrap.min.js"></script>-->
-<!--  <script src="../static/dist/modules/nicescroll/jquery.nicescroll.min.js"></script>-->
-<!--  <script src="../static/dist/modules/scroll-up-bar/dist/scroll-up-bar.min.js"></script>-->
-<!--  <script src="../static/dist/js/sa-functions.js"></script>-->
-
-<!--  <script src="../static/dist/modules/chart.min.js"></script>-->
-<!--  <script src="../static/dist/modules/summernote/summernote-lite.js"></script>-->
-
-
-<!--&lt;!&ndash;  <script src="../static/dist/js/scripts.js"></script>&ndash;&gt;-->
-<!--  <script src="../static/dist/js/custom.js"></script>-->
-<!--  <script src="../static/dist/js/demo.js"></script>-->
-
   <!--  vue-->
   <script src="../static/js/jquery-2.2.4.js"></script>
   <script src="../static/Vue/vue.js"></script>
@@ -126,7 +101,6 @@
           //绑定用户信息
           bingUserinfo: function () {
             var useinfo = Common.GetCookie("userinfo");
-            console.log(JSON.parse(useinfo));
             useinfo =  JSON.parse(useinfo);
             this.username = useinfo.name;
             this.age = useinfo.age;
@@ -193,9 +167,9 @@
                       <img class="round_icon" src="../static/dist/img/avatar/avatar-3.jpeg">
                     </div>
                   <div class="touxiang_text">
-                      <p>{{username}}</p>
-                      <p>{{level}}</p>
-                      <p><a href="login.html">退出</a></p>
+                      <p>用户名： {{username}}</p>
+                      <p>职位： {{level}}</p>
+                      <p>  <el-link type="primary" href="login.html" >退出系统</el-link></p>
                   </div>
                 </div>
                 <!--  树形菜单组件-->

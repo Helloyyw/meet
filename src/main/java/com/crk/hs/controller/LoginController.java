@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
@@ -18,7 +19,8 @@ public class LoginController {
 
     @Resource
     UserServiceImpl userService;
-
+    @Resource
+     com.crk.hs.mail.MailService MailService;
     /**
      * 系统启动 跳转登录页
      * @return
@@ -61,4 +63,51 @@ public class LoginController {
         }
     }
 
+    /**
+     * 忘记密码
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/forgot")
+    public ResultVo  forgot(@RequestBody  String json){
+//解密json数据
+        try {
+            json =   URLDecoder.decode(json, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        //转化为json对象
+        JSONObject jsonObject = JSONObject.parseObject(json);
+
+        String email = jsonObject.get("email").toString();
+
+        User userInfo = null;
+        try {
+            userInfo = userService.getByEmail(email);
+            String to = email;
+            String subject = "你的系统密码是：  ";
+            String rscId = "img110";
+            String content = "<html><body><img width='250px' src=\'cid:" + rscId + "\'> <h1>" +
+                     userInfo.getPwd() +
+                    "</h1></body></html>";
+            // 此处为linux系统路径
+            String imgPath = "E:\\bishe\\cqrwkj\\lmz_meet\\meet\\meet\\src\\main\\resources\\static\\dist\\img\\avatar\\avatar-1.jpeg";
+            try {
+                MailService.sendInlineResourceMail(to, subject, content, imgPath, rscId);
+                System.out.println("邮件发送成功了");
+            } catch (MessagingException e) {
+                System.out.println("邮件发送失败了");
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(userInfo == null){
+            return  ResultVo.error(CodeMsg.SELECT_ERROR);
+        }else {
+            return ResultVo.success(userInfo);
+        }
+    }
 }

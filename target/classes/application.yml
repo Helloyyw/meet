@@ -1,7 +1,11 @@
 server:
   port: 8083
-
 spring:
+  mail:
+    host: smtp.qq.com
+    username: 1475556814@qq.com
+    password: sflyvbcfialxibeh #开启POP3之后设置的客户端授权码
+    default-encoding: UTF-8
   datasource:
     name: ex
     url: jdbc:mysql://127.0.0.1:3306/meet?serverTimezone=UTC&characterEncoding=utf-8
@@ -32,6 +36,7 @@ spring:
     static-path-pattern: /static/**
   thymeleaf:
     cache: false
+
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml #这里是mapper的配置文件
   type-aliases-package: com.crk.hs.entity
